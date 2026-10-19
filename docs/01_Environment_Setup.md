@@ -10,29 +10,30 @@ problems met and how they were solved, so that any team member can reproduce it.
 
 ## 1. Chosen software stack
 
-| Component | Version | Why |
-|---|---|---|
-| Ubuntu | 24.04 LTS (Noble) | The only Tier 1 platform for ROS 2 Jazzy. 22.04 would mean ROS 2 Humble (paired with Gazebo Fortress, not Harmonic); 20.04's ROS 2 releases are end-of-life. 26.04 pairs with a different ROS release (Lyrical), not the approved stack. |
-| ROS 2 | Jazzy Jalisco (LTS, supported to May 2029) | Approved by the mentor; current LTS. |
-| Simulator | Gazebo Harmonic (installed via `ros-jazzy-ros-gz`) | Official pairing for Jazzy; used by Nav2 and Open-RMF Jazzy. |
-| Navigation | Nav2 (Jazzy binaries) | Official Nav2 simulation is the trusted baseline. |
-| Host | Windows + WSL2 | Avoids dual-boot; WSL2 can use the real NVIDIA GPU (VirtualBox cannot). |
+| Component  | Version                                              | Why                                                                                                                                                                                                                                      |
+| ---------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ubuntu     | 24.04 LTS (Noble)                                    | The only Tier 1 platform for ROS 2 Jazzy. 22.04 would mean ROS 2 Humble (paired with Gazebo Fortress, not Harmonic); 20.04's ROS 2 releases are end-of-life. 26.04 pairs with a different ROS release (Lyrical), not the approved stack. |
+| ROS 2      | Jazzy Jalisco (LTS, supported to May 2029)           | Approved by the mentor; current LTS.                                                                                                                                                                                                     |
+| Simulator  | Gazebo Harmonic (installed via `ros-jazzy-ros-gz`) | Official pairing for Jazzy; used by Nav2 and Open-RMF Jazzy.                                                                                                                                                                             |
+| Navigation | Nav2 (Jazzy binaries)                                | Official Nav2 simulation is the trusted baseline.                                                                                                                                                                                        |
+| Host       | Windows + WSL2                                       | Avoids dual-boot; WSL2 can use the real NVIDIA GPU (VirtualBox cannot).                                                                                                                                                                  |
 
 Do **not** install Gazebo Classic (`gazebo`, `gazebo_ros_pkgs`) and do **not** upgrade Ubuntu to 26.04.
 
 ## 2. Reference machine
 
-| Item | Value |
-|---|---|
-| Laptop | Gigabyte AORUS 15 SE |
-| GPUs | NVIDIA GeForce RTX 3070 Laptop GPU (8 GB) + Intel Iris Xe (integrated) |
-| OS | Windows with WSL2, Ubuntu 24.04 |
-| WSL kernel | 6.18.54.1-microsoft-standard-WSL2 |
-| Mesa | 25.2.8-0ubuntu0.24.04.4 |
+| Item       | Value                                                                  |
+| ---------- | ---------------------------------------------------------------------- |
+| Laptop     | Gigabyte AORUS 15 SE                                                   |
+| GPUs       | NVIDIA GeForce RTX 3070 Laptop GPU (8 GB) + Intel Iris Xe (integrated) |
+| OS         | Windows with WSL2, Ubuntu 24.04                                        |
+| WSL kernel | 6.18.54.1-microsoft-standard-WSL2                                      |
+| Mesa       | 25.2.8-0ubuntu0.24.04.4                                                |
 
 ## 3. Setup steps
 
 ### 3.1 Windows side
+
 1. Install / update the latest NVIDIA Windows driver. **Never install an NVIDIA driver inside WSL** — WSL uses the Windows driver.
 2. In PowerShell:
    ```powershell
@@ -41,6 +42,7 @@ Do **not** install Gazebo Classic (`gazebo`, `gazebo_ros_pkgs`) and do **not** u
    ```
 
 ### 3.2 GPU acceleration inside WSL (the key fix)
+
 Out of the box, OpenGL inside WSL used `llvmpipe` (CPU software rendering) even though `nvidia-smi`
 showed the RTX 3070. Gazebo, and especially its camera sensors, would be too slow or fail this way.
 
@@ -48,13 +50,16 @@ Two causes were found and fixed:
 
 **Cause 1 — user not allowed to open the GPU render device.**
 `/dev/dri/renderD128` belongs to groups `render`/`video`, and the user was in neither.
+
 ```bash
 sudo usermod -aG video,render $USER
 ```
+
 Then in Windows PowerShell: `wsl --shutdown`, and reopen Ubuntu.
 
 **Cause 2 — Mesa picked the Intel integrated GPU / software renderer by default.**
 Forcing the D3D12 driver and selecting the NVIDIA adapter fixed it:
+
 ```bash
 echo 'export GALLIUM_DRIVER=d3d12' >> ~/.bashrc
 echo 'export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA' >> ~/.bashrc
@@ -62,18 +67,23 @@ source ~/.bashrc
 ```
 
 **Check:**
+
 ```bash
 sudo apt install -y mesa-utils
 glxinfo -B | grep -E "OpenGL renderer|OpenGL version"
 ```
+
 Expected (achieved):
+
 ```
 OpenGL renderer string: D3D12 (NVIDIA GeForce RTX 3070 Laptop GPU)
 OpenGL version string: 4.6 (Compatibility Profile) Mesa 25.2.8-0ubuntu0.24.04.4
 ```
+
 If it says `llvmpipe`, GPU acceleration is not active — fix this before going further.
 
 ### 3.3 Install ROS 2 Jazzy, Gazebo Harmonic and Nav2
+
 ```bash
 # Locale
 sudo apt install -y locales && sudo locale-gen en_US en_US.UTF-8
@@ -95,43 +105,46 @@ echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc && source ~/.bashrc
 ## 4. Verification
 
 ### Test B — Official Nav2 simulation (TurtleBot 4, depot world)
+
 ```bash
 ros2 launch nav2_bringup tb4_simulation_launch.py headless:=False
 ```
 
 **Result (2026-10-19): Gazebo Harmonic and RViz launched successfully.**
 
-| Check | Result |
-|---|---|
-| Gazebo Harmonic opens with depot world and TurtleBot 4 | Pass |
-| Real-time factor (RTF) | 99.96 % |
-| RViz frame rate | ~31 fps |
-| Nav2 status: Navigation | active |
-| Nav2 status: Localization | active |
-| Robot drives to a goal set with "Nav2 Goal" in RViz | Pass |
+| Check                                                  | Result  |
+| ------------------------------------------------------ | ------- |
+| Gazebo Harmonic opens with depot world and TurtleBot 4 | Pass    |
+| Real-time factor (RTF)                                 | 99.96 % |
+| RViz frame rate                                        | ~31 fps |
+| Nav2 status: Navigation                                | active  |
+| Nav2 status: Localization                              | active  |
+| Robot drives to a goal set with "Nav2 Goal" in RViz    | Pass    |
 
 **Test B: PASSED.**
 
 ### Test A — Gazebo camera sensor
+
 Close every other simulation first (`Ctrl+C` in its terminal, then `pkill -f "gz sim"`), then:
+
 ```bash
 gz sim -v 3 sensors_demo.sdf
 ```
+
 Press Play; camera panels must show live images with RTF near 100 %.
 
 First attempt (2026-10-19) was inconclusive: the Nav2 depot simulation was still running, so the GUI
-connected to the depot world (`Listening to stats on [/world/depot/stats]`, `Found additional
-publishers on /stats, /clock`). The ogre2 renderer loaded without errors.
+connected to the depot world (`Listening to stats on [/world/depot/stats]`, `Found additional publishers on /stats, /clock`). The ogre2 renderer loaded without errors.
 
 Rerun (2026-10-19), with other simulations closed:
 
-| Check | Result |
-|---|---|
-| RGB camera image | Pass |
-| Depth camera image | Pass |
-| RGB-D image + depth | Pass |
-| Thermal camera image | Pass |
-| Real-time factor | 62.59 % (5 cameras + LiDAR rendering at once; our robot uses 1 camera + LiDAR) |
+| Check                | Result                                                                         |
+| -------------------- | ------------------------------------------------------------------------------ |
+| RGB camera image     | Pass                                                                           |
+| Depth camera image   | Pass                                                                           |
+| RGB-D image + depth  | Pass                                                                           |
+| Thermal camera image | Pass                                                                           |
+| Real-time factor     | 62.59 % (5 cameras + LiDAR rendering at once; our robot uses 1 camera + LiDAR) |
 
 **Test A: PASSED.**
 
@@ -141,13 +154,26 @@ Note: the warnings `Ogre2Camera::SetVisibilityMask`, `emission texture not suppo
 ## 5. Recorded package versions
 
 Run once and paste the output below (these versions are frozen for the project):
+
 ```bash
 dpkg -l | grep -E "ros-jazzy-(desktop |ros-gz |navigation2 |nav2-bringup |gz-sim-vendor )" | awk '{print $2, $3}'
 gz sim --version
 ```
-```
-(paste output here)
-```
+
+Recorded 2026-10-19 on the reference machine:
+
+| Package                           | Version                           |
+| --------------------------------- | --------------------------------- |
+| ros-jazzy-desktop                 | 0.11.0-1noble.20261006.040109     |
+| ros-jazzy-ros-gz                  | 1.0.24-1noble.20261006.041805     |
+| ros-jazzy-gz-sim-vendor           | 0.0.13-1noble.20260905.073557     |
+| ros-jazzy-navigation2             | 1.3.13-1noble.20260921.033624     |
+| ros-jazzy-nav2-bringup            | 1.3.13-1noble.20261006.042503     |
+| Gazebo Sim (`gz sim --version`) | 8.15.0 (= Gazebo Harmonic)        |
+| Mesa                              | 25.2.8-0ubuntu0.24.04.4           |
+| Python                            | 3.12 (Ubuntu 24.04 system Python) |
+
+Other team members should install the same way (Section 3.3) and compare their output with this table.
 
 ## 6. Team rules (to avoid breaking the setup)
 
@@ -159,10 +185,10 @@ gz sim --version
 
 ## 7. Troubleshooting
 
-| Symptom | Fix |
-|---|---|
-| `glxinfo` shows `llvmpipe` | Section 3.2: add user to `video,render`, `wsl --shutdown`, set the two exports. |
-| `glxinfo` shows `Intel(R) Iris(R) Xe Graphics` | `MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA` is missing. |
-| `nvidia-smi` not found / fails | Update the Windows NVIDIA driver and run `wsl --update`. |
-| Gazebo very slow (RTF far below 100 %) | Check the renderer is the RTX 3070 (Section 3.2). |
-| Group change has no effect | Run `wsl --shutdown` in Windows; closing the terminal is not enough. |
+| Symptom                                            | Fix                                                                                 |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `glxinfo` shows `llvmpipe`                     | Section 3.2: add user to `video,render`, `wsl --shutdown`, set the two exports. |
+| `glxinfo` shows `Intel(R) Iris(R) Xe Graphics` | `MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA` is missing.                              |
+| `nvidia-smi` not found / fails                   | Update the Windows NVIDIA driver and run `wsl --update`.                          |
+| Gazebo very slow (RTF far below 100 %)             | Check the renderer is the RTX 3070 (Section 3.2).                                   |
+| Group change has no effect                         | Run `wsl --shutdown` in Windows; closing the terminal is not enough.              |
