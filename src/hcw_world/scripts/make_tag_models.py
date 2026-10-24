@@ -13,7 +13,7 @@ import cv2
 import numpy as np
 
 TAG_IDS = [11, 12, 13, 14]
-TAG_SIZE = 0.20          # m, black square side (the white border is extra)
+TAG_SIZE = 0.30          # m, black square side (the white border is extra)
 BIN = (0.40, 0.40, 0.60)  # m: x, y, z of the container
 TAG_CENTER_Z = 0.30      # m above the floor (the TurtleBot camera is at about this height)
 
@@ -40,8 +40,7 @@ SDF = """<?xml version="1.0"?>
         <material>
           <ambient>1 1 1 1</ambient>
           <diffuse>1 1 1 1</diffuse>
-          <emissive>1 1 1 1</emissive>
-          <pbr><metal><albedo_map>materials/textures/tag{id}.png</albedo_map></metal></pbr>
+          <pbr><metal><albedo_map>model://hcw_container_{id}/materials/textures/tag{id}.png</albedo_map></metal></pbr>
         </material>
       </visual>
     </link>

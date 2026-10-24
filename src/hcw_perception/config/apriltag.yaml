@@ -2,7 +2,7 @@
     ros__parameters:
         image_transport: raw
         family: 36h11           # same family as the container models (hcw_world/scripts/make_tag_models.py)
-        size: 0.20              # black tag square edge in metres (must match TAG_SIZE in make_tag_models.py)
+        size: 0.30              # black tag square edge in metres (must match TAG_SIZE in make_tag_models.py)
         max_hamming: 0
         qos_profile: default
         detector:
@@ -16,4 +16,4 @@
         tag:
             ids: [11, 12, 13, 14]
             frames: [tag_A, tag_B, tag_C, tag_wrong]
-            sizes: [0.20, 0.20, 0.20, 0.20]
+            sizes: [0.30, 0.30, 0.30, 0.30]

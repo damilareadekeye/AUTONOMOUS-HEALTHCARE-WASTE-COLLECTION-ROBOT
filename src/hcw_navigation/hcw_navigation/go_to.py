@@ -54,7 +54,9 @@ def main():
         sys.exit(2)
     rclpy.init()
     navigator = BasicNavigator()
-    navigator.waitUntilNav2Active()
+    # localizer='bt_navigator': the default ('amcl') would publish a (0, 0) initial pose and reset
+    # AMCL. The start pose is set once by Nav2 itself (amcl.initial_pose in nav2_params.yaml).
+    navigator.waitUntilNav2Active(localizer='bt_navigator')
     ok = all(go_to(navigator, n, locations[n]) for n in names)
     rclpy.shutdown()
     sys.exit(0 if ok else 1)

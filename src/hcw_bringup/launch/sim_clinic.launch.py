@@ -2,6 +2,7 @@
 
     ros2 launch hcw_bringup sim_clinic.launch.py
     ros2 launch hcw_bringup sim_clinic.launch.py profile:=building   # fastest, empty shell
+    ros2 launch hcw_bringup sim_clinic.launch.py gui:=True           # also open the Gazebo window
     ros2 launch hcw_bringup sim_clinic.launch.py rviz:=True          # also open RViz
     ros2 launch hcw_bringup sim_clinic.launch.py headless:=True      # no windows
     ros2 launch hcw_bringup sim_clinic.launch.py x_pose:=30.9 y_pose:=-17.3
@@ -18,7 +19,7 @@ from hcw_world.world_builder import build_world, PROFILES, resource_paths
 from launch import LaunchDescription
 from launch.actions import (AppendEnvironmentVariable, DeclareLaunchArgument,
                             IncludeLaunchDescription, OpaqueFunction, TimerAction)
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
@@ -42,7 +43,8 @@ def _start_simulation(context):
 
     gz_client = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(ros_gz_sim, 'launch', 'gz_sim.launch.py')),
-        condition=UnlessCondition(headless),
+        condition=IfCondition(PythonExpression(
+            ["'", LaunchConfiguration('gui'), "' == 'True' and '", headless, "' != 'True'"])),
         launch_arguments={'gz_args': '-v4 -g'}.items())
 
     robot_state_publisher = Node(
@@ -77,6 +79,9 @@ def generate_launch_description():
     args = [
         DeclareLaunchArgument('headless', default_value='False',
                               description='True = no Gazebo window and no RViz'),
+        DeclareLaunchArgument('gui', default_value='False',
+                              description='True = open the Gazebo window (slows the simulation a lot; '
+                                          'you can also open it later with: gz sim -g)'),
         DeclareLaunchArgument('decoy', default_value='False',
                               description='True = also place the wrong container (tag 14), for tests'),
         DeclareLaunchArgument('rviz', default_value='False',
