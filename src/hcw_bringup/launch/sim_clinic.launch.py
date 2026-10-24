@@ -32,7 +32,9 @@ def _start_simulation(context):
     headless = LaunchConfiguration('headless')
 
     profile = LaunchConfiguration('profile').perform(context)
-    world_sdf = build_world(os.path.join(tempfile.gettempdir(), 'hcw_clinic.sdf'), profile)
+    decoy = LaunchConfiguration('decoy').perform(context) == 'True'
+    world_sdf = build_world(os.path.join(tempfile.gettempdir(), 'hcw_clinic.sdf'), profile,
+                            containers=True, decoy=decoy)
 
     gz_server = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(ros_gz_sim, 'launch', 'gz_sim.launch.py')),
@@ -75,6 +77,8 @@ def generate_launch_description():
     args = [
         DeclareLaunchArgument('headless', default_value='False',
                               description='True = no Gazebo window and no RViz'),
+        DeclareLaunchArgument('decoy', default_value='False',
+                              description='True = also place the wrong container (tag 14), for tests'),
         DeclareLaunchArgument('rviz', default_value='False',
                               description='True = also open RViz (costs simulation speed)'),
         DeclareLaunchArgument('profile', default_value='building',

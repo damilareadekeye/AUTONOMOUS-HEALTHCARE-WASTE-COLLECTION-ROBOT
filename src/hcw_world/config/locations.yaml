@@ -1,0 +1,20 @@
+# Named places in the clinic ground floor and the containers standing at them.
+# Coordinates are WORLD coordinates in metres (the saved map uses the same frame). yaw in radians.
+# Single source of truth: read by hcw_world (places containers), hcw_navigation and hcw_task.
+#
+# A, B, C are three consulting rooms on the west side (Clinic A). The robot stops in the
+# corridor in front of the room door, facing east (yaw 0), and the container stands 1.8 m
+# ahead inside the room with its tag facing west (yaw pi), towards the robot.
+
+locations:
+  home:         {x: 8.0,  y: -31.7, yaw: 0.0}     # start spot, "L1_sub_waiting_area_1"
+  collection_A: {x: 13.6, y: -18.6, yaw: 0.0, tag_id: 11}   # consulting room 12
+  collection_B: {x: 13.6, y: -26.2, yaw: 0.0, tag_id: 12}   # consulting room 10
+  collection_C: {x: 13.6, y: -33.0, yaw: 0.0, tag_id: 13}   # consulting room 8
+  storage:      {x: 43.5, y: -7.8,  yaw: 0.0}     # store room at the north-east (to be confirmed on the map)
+
+containers:        # tag ids: 11 = A, 12 = B, 13 = C, 14 = wrong container (test only)
+  - {tag_id: 11, x: 15.4, y: -18.6, yaw: 3.14159}
+  - {tag_id: 12, x: 15.4, y: -26.2, yaw: 3.14159}
+  - {tag_id: 13, x: 15.4, y: -33.0, yaw: 3.14159}
+  - {tag_id: 14, x: 15.4, y: -22.7, yaw: 3.14159, enabled: false}   # decoy in consulting room 11
