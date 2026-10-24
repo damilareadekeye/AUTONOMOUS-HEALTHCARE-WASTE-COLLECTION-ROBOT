@@ -250,7 +250,8 @@ Task manager, verification rule, attach/release, wrong-container handling (Week 
 Weeks 1 and 2 are complete, with about 15 days left to Nov 8 for weeks 3 and 4 (task manager, verification,
 attach and release, failure handling, 20 to 30 repeated runs, documentation). That is on schedule, with little buffer.
 The schedule document allows 3 to 5 weeks, so the realistic range ends around Nov 22.
-Roadmap steps 2 to 8 below are done; step 1 (send the update) and steps 9 onward remain.
+In the roadmap below, steps 2 to 6 are done and step 7 is partly done (containers only; bins, obstacles and beds
+are not added). Step 1 (send the update), step 8 (verification node) and steps 9 onward remain.
 
 ## 7. Roadmap: what is left (in order)
 
