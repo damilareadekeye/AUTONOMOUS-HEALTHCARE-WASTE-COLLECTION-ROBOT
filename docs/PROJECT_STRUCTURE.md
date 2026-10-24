@@ -227,27 +227,30 @@ The progress update to the mentor is due **Oct 25**.
 | Test whether the Open-RMF Clinic World can be reused | Mostly done: builds, launches, and our own launch runs it with a TurtleBot at full speed. Only the L1 shell is practical. |
 | Decision: Clinic World or adapted office world | **Provisional: Clinic ground floor shell.** Final confirmation needs the Nav2 test in Week 2. |
 
-### Week 2 (Oct 19 to 25): world, map, locations, camera, AprilTag. Status: about 25 % done, BEHIND
+### Week 2 (Oct 19 to 25): world, map, locations, camera, AprilTag. Status: DONE (updated 2026-10-24, evening)
 
 | Planned | State |
 |---|---|
-| Finalise the hospital-like world | Partly: shell runs; no obstacles, containers or markers yet |
-| Build the map with SLAM Toolbox | **Not started** |
-| Define named locations (collection points A, B, C, storage, home) | **Not started** |
-| Add a camera to the robot | Done (TurtleBot 4 RGB-D camera publishes `/rgbd_camera/image`) |
-| AprilTag-marked container models | **Not started** |
-| `apriltag_ros` detection, tag IDs published in ROS 2 | **Not started** (package not yet installed) |
-| Progress update to mentor (Oct 25) | **Due tomorrow.** Can honestly report: environment, evaluations and clinic world with robot done; map and tags next. |
+| Finalise the hospital-like world | Done: clinic ground floor, doors removed, containers added (decision confirmed) |
+| Build the map with SLAM Toolbox | Done: west wing and north corridor; the north-east hall and east wing are poorly mapped or unmapped |
+| Define named locations (collection points A, B, C, storage, home) | Done (`hcw_world/config/locations.yaml`); storage is a bay in the north corridor, not the real STORE room |
+| Add a camera to the robot | Done (TurtleBot 4 RGB-D camera, 320 x 240) |
+| AprilTag-marked container models | Done (tags 11, 12, 13; 14 = wrong container) |
+| `apriltag_ros` detection, tag IDs published in ROS 2 | Done: correct tag in 9 of 9 checks |
+| Progress update to mentor (Oct 25) | Draft ready: `docs/06_Progress_Update_Week2.md` |
 
-Checkpoint "Robot navigates to named locations; tag IDs detected": **not reached**.
+Checkpoint "Robot navigates to named locations; tag IDs detected": **reached** (15 of 15 legs over three loops).
+See `docs/05_Mapping_Navigation_Perception.md`. Remaining gaps are listed there (furniture left out,
+decoy container and obstacles not yet tested).
 
 ### Weeks 3 and 4: not started
 Task manager, verification rule, attach/release, wrong-container handling (Week 3); repeated tests and documentation (Week 4).
 
 ### Overall
-Roughly **1.3 of 4 weeks of work done**, with 15 days left to Nov 8. It is recoverable if the map,
-locations and tags are done in the next 4 to 5 days. The schedule document itself allows 3 to 5 weeks, so
-the realistic range ends around Nov 22. Tell the mentor early if the dates will move.
+Weeks 1 and 2 are complete, with about 15 days left to Nov 8 for weeks 3 and 4 (task manager, verification,
+attach and release, failure handling, 20 to 30 repeated runs, documentation). That is on schedule, with little buffer.
+The schedule document allows 3 to 5 weeks, so the realistic range ends around Nov 22.
+Roadmap steps 2 to 8 below are done; step 1 (send the update) and steps 9 onward remain.
 
 ## 7. Roadmap: what is left (in order)
 
