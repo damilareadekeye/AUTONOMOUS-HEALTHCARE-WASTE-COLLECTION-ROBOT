@@ -25,7 +25,18 @@ Options:
 | `headless` | `False` | `True` = no Gazebo window and no RViz |
 | `x_pose`, `y_pose`, `yaw` | 8.0, -31.7, 0.0 | start pose in the world |
 
-## Move the robot (check that it works)
+## Move the robot with the arrow keys
+
+```bash
+source ~/hcw_ws/scripts/env.sh
+ros2 run hcw_bringup teleop_arrows
+```
+Up / Down = forward / back, Left / Right = turn, Space = stop, `+` / `-` = faster / slower, `q` = quit.
+Hold a key to keep moving (the robot stops about 0.5 s after you let go). Click inside that terminal
+first: it only reads keys from its own window. It must be a terminal that ran `source scripts/env.sh`
+(same `ROS_DOMAIN_ID` as the simulation). Source: `hcw_bringup/hcw_bringup/teleop_arrows.py`.
+
+## Move the robot (other ways, check that it works)
 
 ```bash
 source ~/hcw_ws/scripts/env.sh
@@ -73,6 +84,14 @@ running (`gz topic -e -t /stats -n 1 | grep real_time_factor` answers). The Gaze
 (`gz sim -v4 -g`) had started together with the server and exited silently. Fixed on 2026-10-24:
 the launch now starts the window 8 s after the server. If it still happens, open the window by hand
 in a new terminal: `source ~/hcw_ws/scripts/env.sh && gz sim -v4 -g`, then wait up to a minute.
+
+## Troubleshooting: simulation slows down while driving
+
+Measured 2026-10-24 on the reference machine, `profile=building`, Gazebo window and RViz open:
+average real-time factor 0.33; with RViz closed, 0.73. RViz (with its camera and depth displays) is
+costly. Do not open more than one Gazebo window: a second `gz sim -g` renders the whole scene again
+(`ps -eo args | grep "gz sim -v4 -g"` must show one). Close RViz when you do not need it, and
+disable its camera and depth image displays.
 
 ## Next
 

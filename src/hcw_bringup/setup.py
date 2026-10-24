@@ -18,4 +18,9 @@ setup(
     maintainer_email='adekeyedamilarelekan@gmail.com',
     description='Launch files for the healthcare-waste robot',
     license='Apache-2.0',
+    entry_points={
+        'console_scripts': [
+            'teleop_arrows = hcw_bringup.teleop_arrows:main',
+        ],
+    },
 )
