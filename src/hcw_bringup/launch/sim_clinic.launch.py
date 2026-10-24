@@ -2,6 +2,7 @@
 
     ros2 launch hcw_bringup sim_clinic.launch.py
     ros2 launch hcw_bringup sim_clinic.launch.py profile:=building   # fastest, empty shell
+    ros2 launch hcw_bringup sim_clinic.launch.py rviz:=True          # also open RViz
     ros2 launch hcw_bringup sim_clinic.launch.py headless:=True      # no windows
     ros2 launch hcw_bringup sim_clinic.launch.py x_pose:=30.9 y_pose:=-17.3
 
@@ -17,9 +18,9 @@ from hcw_world.world_builder import build_world, PROFILES, resource_paths
 from launch import LaunchDescription
 from launch.actions import (AppendEnvironmentVariable, DeclareLaunchArgument,
                             IncludeLaunchDescription, OpaqueFunction, TimerAction)
-from launch.conditions import UnlessCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration
+from launch.substitutions import Command, LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 
@@ -59,7 +60,8 @@ def _start_simulation(context):
         }.items())
 
     rviz = Node(
-        condition=UnlessCondition(headless),
+        condition=IfCondition(PythonExpression(
+            ["'", LaunchConfiguration('rviz'), "' == 'True' and '", headless, "' != 'True'"])),
         package='rviz2', executable='rviz2', output='screen',
         arguments=['-d', os.path.join(tb4_desc, 'rviz', 'config.rviz')],
         parameters=[{'use_sim_time': True}])
@@ -73,6 +75,8 @@ def generate_launch_description():
     args = [
         DeclareLaunchArgument('headless', default_value='False',
                               description='True = no Gazebo window and no RViz'),
+        DeclareLaunchArgument('rviz', default_value='False',
+                              description='True = also open RViz (costs simulation speed)'),
         DeclareLaunchArgument('profile', default_value='building',
                               description='How much of the clinic to load: %s' % (PROFILES,)),
         # Default: parking spot "L1_sub_waiting_area_1" on the clinic ground floor.
