@@ -66,6 +66,14 @@ Topics: `/cmd_vel` (input), `/odom`, `/scan` (LiDAR), `/imu`, `/rgbd_camera/imag
 7. `scripts/clean_sims.sh` uses specific patterns on purpose. A plain `pkill -f ros2` also kills the
    terminal that runs it.
 
+## Troubleshooting: RViz opens but there is no Gazebo window
+
+Symptom: the launch starts and RViz opens, but no Gazebo window appears. The simulation is actually
+running (`gz topic -e -t /stats -n 1 | grep real_time_factor` answers). The Gazebo window process
+(`gz sim -v4 -g`) had started together with the server and exited silently. Fixed on 2026-10-24:
+the launch now starts the window 8 s after the server. If it still happens, open the window by hand
+in a new terminal: `source ~/hcw_ws/scripts/env.sh && gz sim -v4 -g`, then wait up to a minute.
+
 ## Next
 
 Drive the robot around the building and judge whether the ground floor is usable with Nav2

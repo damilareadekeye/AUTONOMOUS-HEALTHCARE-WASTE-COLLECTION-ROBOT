@@ -16,7 +16,7 @@ from ament_index_python.packages import get_package_share_directory
 from hcw_world.world_builder import build_world, PROFILES, resource_paths
 from launch import LaunchDescription
 from launch.actions import (AppendEnvironmentVariable, DeclareLaunchArgument,
-                            IncludeLaunchDescription, OpaqueFunction)
+                            IncludeLaunchDescription, OpaqueFunction, TimerAction)
 from launch.conditions import UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
@@ -64,7 +64,9 @@ def _start_simulation(context):
         arguments=['-d', os.path.join(tb4_desc, 'rviz', 'config.rviz')],
         parameters=[{'use_sim_time': True}])
 
-    return [gz_server, gz_client, robot_state_publisher, spawn_robot, rviz]
+    # The window must start after the server is up, otherwise it can exit silently.
+    return [gz_server, TimerAction(period=8.0, actions=[gz_client]),
+            robot_state_publisher, spawn_robot, rviz]
 
 
 def generate_launch_description():
