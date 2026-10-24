@@ -19,11 +19,19 @@ Everything below runs in the **Ubuntu (WSL) terminal** unless it says PowerShell
 | Test B: official Nav2 TurtleBot 4 depot simulation | Passed |
 | Test A: Gazebo camera sensors (RGB, depth, RGB-D, thermal) | Passed |
 | Atlas-Autonomy | Evaluated, rejected (does not build). Not used. |
-| Open-RMF Clinic World | Builds and launches; RViz floor plan OK. Still to do: Gazebo 3D view, real-time factor, errors, and Nav2 test (doc 03, Step 2) |
-| World decision (Clinic L1 vs adapted office) | Pending |
-| Map (SLAM Toolbox), named locations, camera, AprilTag, task manager, repeated tests | Not started |
+| Open-RMF Clinic World | Runs with our TurtleBot at real-time speed (doc 04); Nav2 test passed (doc 03, Step 2) |
+| World decision | **Clinic ground floor (L1) shell: decided 2026-10-24** |
+| Map (SLAM Toolbox), named locations (home, A, B, C, storage) | Done (doc 05) |
+| Camera, AprilTag containers, tag detection (ids 11, 12, 13) | Done: 9 of 9 correct detections (doc 05) |
+| Navigation to every named place | Done: 15 of 15 legs over three loops (doc 05) |
+| Task manager (state machine), verification rule, attach and release, wrong-container handling | **Next** (week 3) |
+| 20 to 30 repeated test runs, final documentation | Week 4 |
 
 Target: baseline finished **2026-11-08**, review meeting week of **2026-11-09**.
+
+**Fastest way to see everything work:** `scripts/clean_sims.sh && scripts/test_all_places.sh`
+(starts the simulation, Nav2 and tag detection, then drives home, A, B, C, storage, home; about 6 minutes).
+Details: `05_Mapping_Navigation_Perception.md`.
 
 ## 2. Start of every session (checklist)
 

@@ -18,6 +18,7 @@ import sys
 import cv2
 
 RADIUS_M = 0.55            # blocked disc around each door centre
+UNKNOWN = 205              # pgm value of unknown cells written by map_saver
 MAPS = os.path.join(os.path.dirname(__file__), '..', 'maps')
 WORLD = os.path.expanduser(
     '~/eval/rmf_ws/install/rmf_demos_maps/share/rmf_demos_maps/maps/clinic/clinic.world')
@@ -41,12 +42,19 @@ def main():
     img = cv2.imread(pgm_path, cv2.IMREAD_GRAYSCALE)
     height = img.shape[0]
     doors = door_centres()
+    r = int(round(RADIUS_M / res))
+    sealed = 0
     for name, x, y in doors:
         px = int(round((x - origin[0]) / res))
         py = height - 1 - int(round((y - origin[1]) / res))
-        cv2.circle(img, (px, py), int(round(RADIUS_M / res)), 0, thickness=-1)
+        window = img[max(py - r, 0):py + r + 1, max(px - r, 0):px + r + 1]
+        if window.size == 0 or (window == UNKNOWN).all():
+            continue                       # door in an unmapped area: nothing to seal
+        cv2.circle(img, (px, py), r, 0, thickness=-1)
+        sealed += 1
     cv2.imwrite(pgm_path, img)
-    print('sealed %d consulting-room doorways in %s' % (len(doors), pgm_path))
+    print('sealed %d of %d consulting-room doorways (the rest are in unmapped areas) in %s'
+          % (sealed, len(doors), pgm_path))
     return 0 if doors else 1
 
 

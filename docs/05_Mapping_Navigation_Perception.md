@@ -47,7 +47,7 @@ World coordinates in metres (the map uses the same frame).
 | collection_A | 13.6 | -18.6 | Corridor in front of consulting room 12, facing east. Container tag 11 stands 1.8 m ahead inside the room |
 | collection_B | 13.6 | -26.2 | Consulting room 10, tag 12 |
 | collection_C | 13.6 | -33.0 | Consulting room 8, tag 13 |
-| storage | 30.9 | -11.5 | Storage bay in the north corridor (see the note below) |
+| storage | 30.9 | -11.5 | Storage bay in the north corridor (see the note below; the original storage point (43.5, -7.8) in the north-east hall was reachable but the way back was not) |
 | tag 14 | 15.4 | -22.7 | Wrong container for rejection tests; only placed with `sim_clinic.launch.py decoy:=True` |
 
 Storage note: the real STORE room is in the north-east hall. SLAM mapped that large open hall
@@ -65,7 +65,11 @@ corridor. Revisit after re-mapping the hall.
 3. Speckle was removed from the saved image: occupied pixel groups shorter than 1.5 m (stray scan
    points in the open hall) were turned into free space. The raw map is not kept; re-run `map_clinic`
    to regenerate.
-4. Alignment was checked by plotting the clinic's consulting-room doors and graph points on the map:
+4. Consulting-room doorways were blocked on the map (`seal_room_doors.py`). The doors are removed in the
+   simulation, so the rooms are open; their insides are unmapped, and Nav2 took shortcuts into them and could not
+   plan from inside. The robot stops in the corridor in front of each door; the camera sees the container
+   through the open doorway.
+5. Alignment was checked by plotting the clinic's consulting-room doors and graph points on the map:
    they fall on the wall openings and corridors.
 
 Covered: the west wing (Clinic A rooms and corridor), the north corridor, and part of the
@@ -106,6 +110,40 @@ Run with storage in the north-east hall (storage at 43.5, -7.8):
 9. **Tag check:** `ros2 topic echo --once` reads one message, often an empty one. Use
    `tag_monitor --collect`.
 
-## 7. Latest full run
+## 7. Final results (2026-10-24)
 
-_See the result table appended below after the final run._
+Final configuration: storage in the north corridor, speckle removed, consulting-room doorways sealed on the
+map (`scripts/seal_room_doors.py`), inflation 0.35 m, robot radius 0.18 m, `allow_unknown: false`.
+
+**Reliability run:** three full loops (home, A, B, C, storage, home), no restart between loops.
+
+| Metric | Result |
+|---|---|
+| Legs completed | 15 of 15 |
+| Tag detected at collection points | 9 of 9, always the correct id (11 at A, 12 at B, 13 at C), never a wrong id |
+| Final position error at the named places | 0.02 to 0.31 m (AMCL estimate; Nav2's goal tolerance is 0.25 m), home within 0.1 m |
+| Time A to B | about 35 s; B to C about 33 s; C to storage about 90 s; storage to home about 110 s |
+| Real-time factor | 1.0 (Gazebo window closed) |
+
+**Final regression** with the exact committed map, from a clean start: 5 of 5 legs reached,
+tags 11, 12, 13 detected, back at home within 0.04 m.
+
+Not yet tested: the wrong container (tag 14, `decoy:=True`), obstacles in the path, containers being picked up
+(Week 3). Detection is only checked when the robot has stopped at the point; it has not been tested
+while moving or from other angles.
+
+## 8. Commands in the repository
+
+| Command | What it does |
+|---|---|
+| `scripts/env.sh` | Source in every terminal |
+| `scripts/clean_sims.sh` | Stop everything, including leftover Nav2 nodes. Run before every new start |
+| `scripts/test_all_places.sh` | Starts simulation, Nav2 and tag detection and drives home, A, B, C, storage, home with tag checks (about 6 minutes) |
+| `src/hcw_navigation/scripts/seal_room_doors.py` | Block consulting-room doorways on the saved map (run after saving a new map) |
+| `src/hcw_navigation/scripts/plot_map.py` | Draw the map with named places into `docs/images/clinic_map_locations.png` |
+| `src/hcw_world/scripts/make_tag_models.py` | Regenerate the container and tag models |
+
+Always run `scripts/clean_sims.sh` first: leftover processes from an earlier run (duplicate Nav2 nodes)
+make a new Nav2 fail to start, and a hung command can look like a silent hang.
+
+![Clinic map with named places](images/clinic_map_locations.png)

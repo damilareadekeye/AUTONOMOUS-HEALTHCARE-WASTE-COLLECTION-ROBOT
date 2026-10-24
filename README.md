@@ -12,6 +12,8 @@ Stack: Ubuntu 24.04 (WSL2) · ROS 2 Jazzy · Gazebo Harmonic · Nav2 · AprilTag
 |---|---|
 | Run the simulation today | [docs/00_Quick_Start_Run_Workflow.md](docs/00_Quick_Start_Run_Workflow.md) |
 | Run the clinic + TurtleBot simulation | [docs/04_Clinic_Simulation_Bringup.md](docs/04_Clinic_Simulation_Bringup.md) |
+| Map, named places, Nav2, AprilTag results | [docs/05_Mapping_Navigation_Perception.md](docs/05_Mapping_Navigation_Perception.md) |
+| Week 2 progress update (draft for the mentor) | [docs/06_Progress_Update_Week2.md](docs/06_Progress_Update_Week2.md) |
 | **Full picture of the project, the machine and the roadmap** | [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) |
 | Understand the folders and who owns what | [docs/STRUCTURE.md](docs/STRUCTURE.md) |
 | Install everything on a new machine | [docs/01_Environment_Setup.md](docs/01_Environment_Setup.md) |
@@ -39,7 +41,7 @@ hcw_ws/
 └── src/                   ROS 2 packages (one folder = one job)
     ├── hcw_bringup/       launch files: start the simulation (and later the full system)
     ├── hcw_world/         clinic world builder (+ our own models later, e.g. AprilTag containers)
-    ├── hcw_navigation/    (planned) maps, Nav2 and SLAM Toolbox settings, named locations
-    ├── hcw_perception/    (planned) camera, AprilTag detection, verification rule
+    ├── hcw_navigation/    map, Nav2 + SLAM settings, go_to command maps, Nav2 and SLAM Toolbox settings, named locations
+    ├── hcw_perception/    AprilTag detection camera, AprilTag detection, verification rule
     └── hcw_task/          (planned) task manager: Nav2 Simple Commander + state machine
 ```

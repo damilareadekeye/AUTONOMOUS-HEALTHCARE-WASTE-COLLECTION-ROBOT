@@ -53,10 +53,27 @@ storage point (STORE / E-TROLLEY) in our waste-collection task.
 | Real-time factor | _To be recorded_ |
 | Errors in launch output | _To be checked_ |
 
+The two rows above ("Real-time factor", "Errors in launch output") were measured through our own launch
+instead (doc 04): the Open-RMF launch itself was not used further.
+
 ## Step 2 — Can our robot use the clinic ground floor with Nav2?
 
-_Pending._
+**Yes (2026-10-24).** Details are in `04_Clinic_Simulation_Bringup.md` and `05_Mapping_Navigation_Perception.md`.
+
+| Check | Result |
+|---|---|
+| Clinic world loads in Gazebo Harmonic with a TurtleBot 4 | Pass |
+| Real-time factor | 1.0 for the building shell with the Gazebo window closed; 0.01 to 0.03 with all furniture and people (unusable) |
+| Corridors and doorways passable | Pass after removing the Open-RMF door models (they stay shut without the Open-RMF door plugin) |
+| Map built with SLAM Toolbox | Pass for the west wing and the north corridor; the large north-east hall and the east side are poorly mapped or unmapped |
+| Nav2 drives to named places | 15 of 15 legs over three loops (home, A, B, C, storage, home) |
+| AprilTag containers detected | 9 of 9 checks, correct id each time |
+
+Limits found: all furniture, people and equipment are left out (speed); the second floor (L2) is not used;
+the real STORE room in the north-east hall is not used because the map there is unreliable.
 
 ## Decision
 
-_Pending: reuse Clinic World (L1) or adapt an office world._
+**Use the Open-RMF Clinic World, ground floor (L1) shell, as the final simulation world** (confirmed by the team
+on 2026-10-24). An adapted office world is not needed. Furniture and equipment are added back selectively
+as light models of our own (containers now, beds and obstacles later), keeping the real-time factor above 0.8.
