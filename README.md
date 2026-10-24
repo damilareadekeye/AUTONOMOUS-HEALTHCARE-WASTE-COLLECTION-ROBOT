@@ -12,6 +12,7 @@ Stack: Ubuntu 24.04 (WSL2) · ROS 2 Jazzy · Gazebo Harmonic · Nav2 · AprilTag
 |---|---|
 | Run the simulation today | [docs/00_Quick_Start_Run_Workflow.md](docs/00_Quick_Start_Run_Workflow.md) |
 | Run the clinic + TurtleBot simulation | [docs/04_Clinic_Simulation_Bringup.md](docs/04_Clinic_Simulation_Bringup.md) |
+| **Full picture of the project, the machine and the roadmap** | [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) |
 | Understand the folders and who owns what | [docs/STRUCTURE.md](docs/STRUCTURE.md) |
 | Install everything on a new machine | [docs/01_Environment_Setup.md](docs/01_Environment_Setup.md) |
 | See why Atlas-Autonomy was dropped | [docs/02_Atlas_Autonomy_Evaluation.md](docs/02_Atlas_Autonomy_Evaluation.md) |
