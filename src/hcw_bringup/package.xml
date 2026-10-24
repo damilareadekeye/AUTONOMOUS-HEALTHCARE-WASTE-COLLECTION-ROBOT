@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>hcw_bringup</name>
+  <version>0.1.0</version>
+  <description>Launch files that start the healthcare-waste robot simulation.</description>
+  <maintainer email="adekeyedamilarelekan@gmail.com">HCW team</maintainer>
+  <license>Apache-2.0</license>
+  <exec_depend>hcw_world</exec_depend>
+  <exec_depend>nav2_minimal_tb4_sim</exec_depend>
+  <exec_depend>nav2_minimal_tb4_description</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>
