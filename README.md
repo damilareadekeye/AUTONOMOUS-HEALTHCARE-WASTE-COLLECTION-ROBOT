@@ -11,6 +11,7 @@ Stack: Ubuntu 24.04 (WSL2) · ROS 2 Jazzy · Gazebo Harmonic · Nav2 · AprilTag
 | I want to... | Read |
 |---|---|
 | Run the simulation today | [docs/00_Quick_Start_Run_Workflow.md](docs/00_Quick_Start_Run_Workflow.md) |
+| **Contributing (Beni, David): tasks and rules** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) (AI agents: [CLAUDE.md](CLAUDE.md)) |
 | Run the clinic + TurtleBot simulation | [docs/04_Clinic_Simulation_Bringup.md](docs/04_Clinic_Simulation_Bringup.md) |
 | Map, named places, Nav2, AprilTag results | [docs/05_Mapping_Navigation_Perception.md](docs/05_Mapping_Navigation_Perception.md) |
 | Week 2 progress update (draft for the mentor) | [docs/06_Progress_Update_Week2.md](docs/06_Progress_Update_Week2.md) |
