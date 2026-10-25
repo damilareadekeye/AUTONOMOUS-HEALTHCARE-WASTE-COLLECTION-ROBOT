@@ -45,15 +45,18 @@ def load_config():
 class TaskManager(Node):
     def __init__(self):
         super().__init__('task_manager')
-        self.declare_parameter('wrong_container', 'no')   # test labels for the CSV only
-        self.declare_parameter('obstacle', 'no')
+        self.declare_parameter('wrong_container', False)   # test labels for the CSV only
+        self.declare_parameter('obstacle', False)
         self.declare_parameter('notes', '')
+        # True: put the requested container back at its place at the start of each task. Set to false
+        # (ros2 param set /task_manager reset_container false) to test a missing or a wrong container.
+        self.declare_parameter('reset_container', True)
         self.cfg = load_config()
         self.locations = self.cfg['locations']
         self.drop = self.cfg['drop_points']['storage']
         self.queue = []
         self.busy = False
-        self.task_id = 0
+        self.task_id = self.last_run_id()          # continue the numbering of earlier sessions
         self.target = {}
         self.magnet_status = ''
         self.status_pub = self.create_publisher(String, '/hcw/task_status', 10)
@@ -64,6 +67,16 @@ class TaskManager(Node):
         self.create_subscription(String, '/magnet/status', self.on_magnet, 10)
         self.navigator = BasicNavigator()
         self.info = {}
+
+    @staticmethod
+    def last_run_id():
+        path = os.path.expanduser('~/hcw_ws/results/runs.csv')
+        try:
+            with open(path, newline='') as f:
+                rows = list(csv.reader(f))[1:]
+            return max(int(r[0]) for r in rows) if rows else 0
+        except (OSError, ValueError, IndexError):
+            return 0
 
     # ------------------------------------------------------------ callbacks
     def on_request(self, msg):
@@ -140,7 +153,8 @@ class TaskManager(Node):
             if new:
                 w.writerow(CSV_COLUMNS)
             w.writerow([self.task_id, time.strftime('%Y-%m-%d %H:%M:%S'), self.info['point'],
-                        self.get_parameter('wrong_container').value, self.get_parameter('obstacle').value,
+                        'yes' if self.get_parameter('wrong_container').value else 'no',
+                        'yes' if self.get_parameter('obstacle').value else 'no',
                         'yes' if success else 'no', round(t_nav, 1), round(t_verify, 1), round(t_transport, 1),
                         cause, self.get_parameter('notes').value])
 
@@ -164,7 +178,8 @@ class TaskManager(Node):
             self.go_home()
 
         self.expected_pub.publish(Int32(data=0))
-        self.magnet('reset:%d' % tag, 'reset')                      # container back at its place
+        if self.get_parameter('reset_container').value:
+            self.magnet('reset:%d' % tag, 'reset')                  # container back at its place
 
         # 1. drive to the collection point
         self.publish_status('NAVIGATE_TO_POINT')

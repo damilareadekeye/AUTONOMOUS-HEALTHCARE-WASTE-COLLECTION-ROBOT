@@ -24,7 +24,7 @@ Everything below runs in the **Ubuntu (WSL) terminal** unless it says PowerShell
 | Map (SLAM Toolbox), named locations (home, A, B, C, storage) | Done (doc 05) |
 | Camera, AprilTag containers, tag detection (ids 11, 12, 13) | Done: 9 of 9 correct detections (doc 05) |
 | Navigation to every named place | Done: 15 of 15 legs over three loops (doc 05) |
-| Task manager (state machine), verification rule, attach and release, wrong-container handling | **Next** (week 3) |
+| Task manager (state machine), verification rule, simulated magnet, missing and wrong container handling | Done in a first session (doc 08); obstacle case, repeated runs still to do |
 | 20 to 30 repeated test runs, final documentation | Week 4 |
 
 Target: baseline finished **2026-11-08**, review meeting week of **2026-11-09**.

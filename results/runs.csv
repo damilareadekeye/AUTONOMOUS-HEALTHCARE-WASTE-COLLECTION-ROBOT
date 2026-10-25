@@ -1,2 +1,8 @@
 run_id,date,collection_point,wrong_container,obstacle,success,time_navigate_s,time_verify_s,time_transport_s,failure_cause,notes
 1,2026-10-25 14:58:54,A,no,no,yes,38.4,0.5,46.0,,
+1,2026-10-25 15:05:11,B,no,no,yes,25.0,0.5,61.6,,scenario 1 normal B
+2,2026-10-25 15:08:47,C,no,no,yes,12.9,0.5,76.1,,scenario 2 normal C
+3,2026-10-25 15:12:21,A,no,no,no,39.8,39.0,0.0,no container tag detected (expected 11),scenario 3 missing container
+4,2026-10-25 15:14:32,A,no,no,no,38.5,39.0,0.0,"wrong container (tag(s) [13] seen, expected 11)",scenario 4 wrong container
+5,2026-10-25 15:16:53,A,no,no,yes,38.0,0.5,45.2,,scenario 5 normal A after failures
+6,2026-10-25 15:22:44,B,yes,no,yes,22.9,0.6,61.9,,check labels and numbering

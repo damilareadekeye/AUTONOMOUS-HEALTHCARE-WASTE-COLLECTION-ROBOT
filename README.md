@@ -15,6 +15,8 @@ Stack: Ubuntu 24.04 (WSL2) · ROS 2 Jazzy · Gazebo Harmonic · Nav2 · AprilTag
 | Run the clinic + TurtleBot simulation | [docs/04_Clinic_Simulation_Bringup.md](docs/04_Clinic_Simulation_Bringup.md) |
 | Map, named places, Nav2, AprilTag results | [docs/05_Mapping_Navigation_Perception.md](docs/05_Mapping_Navigation_Perception.md) |
 | Week 2 progress update (draft for the mentor) | [docs/06_Progress_Update_Week2.md](docs/06_Progress_Update_Week2.md) |
+| Week 3 design: task manager, verifier, magnet | [docs/07_Task_Manager_Design.md](docs/07_Task_Manager_Design.md) |
+| Week 3 results and how to run a task | [docs/08_Week3_Task_Manager_Results.md](docs/08_Week3_Task_Manager_Results.md) |
 | **Full picture of the project, the machine and the roadmap** | [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) |
 | Understand the folders and who owns what | [docs/STRUCTURE.md](docs/STRUCTURE.md) |
 | Install everything on a new machine | [docs/01_Environment_Setup.md](docs/01_Environment_Setup.md) |
@@ -44,5 +46,5 @@ hcw_ws/
     ├── hcw_world/         clinic world builder (+ our own models later, e.g. AprilTag containers)
     ├── hcw_navigation/    saved map, Nav2 and SLAM Toolbox settings, go_to command
     ├── hcw_perception/    AprilTag detection (verification rule still to do)
-    └── hcw_task/          (planned) task manager: Nav2 Simple Commander + state machine
+    └── hcw_task/          task manager (state machine) and simulated magnet
 ```
