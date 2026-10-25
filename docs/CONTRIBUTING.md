@@ -81,6 +81,23 @@ Keep the AprilTag texture exactly as it is. Run the script (needs Python 3, `ope
 `python3 src/hcw_world/scripts/make_tag_models.py`, and commit the changed script **and** the regenerated
 `model.sdf` files. Do not change sizes or tag ids. Dami's machine will check them in Gazebo. Run time: about 1 hour.
 
+### Task 7 (David): test plan for the repeated runs (needs `docs/07_Task_Manager_Design.md`)
+Read `docs/07_Task_Manager_Design.md` (section 4 state machine, section 7 scenarios). Write `docs/results/test_plan.md`:
+a table of at least 12 test cases. Columns: id, scenario (collection point, wrong container yes/no, obstacle yes/no, ...),
+how to set it up in the simulation (what to change, in words; the reference-machine agent will check this),
+expected behaviour (which states, final result COMPLETED or FAILED and the failure cause), and the pass rule.
+Cover all of: A, B, C normal; wrong container (tag 14); missing container; unstable tag; blocked corridor;
+invalid request. End with how many runs per case so the total is 20 to 30. Do not invent measured results.
+Files: `docs/results/test_plan.md`. Run time: about 1.5 hours.
+
+### Task 8 (David or Dami): demo script
+Write `docs/demo_script.md`: a 5-minute demo narrative for the review meeting. Sections: what to say in the
+first minute (problem, robot, safety scope: sealed empty containers only), the exact commands to start the
+simulation and Nav2 (copy from `docs/05_Mapping_Navigation_Perception.md`), what the audience sees at each step
+(the task flow in section 4 of `docs/07_Task_Manager_Design.md`), how to explain the magnet ("a magnetic latch on the
+robot; in the simulation it is modelled by moving the container with the robot"), and what to say if something fails.
+Files: `docs/demo_script.md`. Run time: about 1 hour.
+
 ### Task 6 (all): the team page
 Each person adds one paragraph about their part of the project to `docs/TEAM.md` (name, role, what they
 worked on, what they learned). Each person edits only their own section. Run time: 20 minutes.
