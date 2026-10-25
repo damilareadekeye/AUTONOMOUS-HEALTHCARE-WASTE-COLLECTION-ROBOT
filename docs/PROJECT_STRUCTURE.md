@@ -243,15 +243,26 @@ Checkpoint "Robot navigates to named locations; tag IDs detected": **reached** (
 See `docs/05_Mapping_Navigation_Perception.md`. Remaining gaps are listed there (furniture left out,
 decoy container and obstacles not yet tested).
 
-### Weeks 3 and 4: not started
-Task manager, verification rule, attach/release, wrong-container handling (Week 3); repeated tests and documentation (Week 4).
+### Weeks 3 and 4: core DONE early (updated 2026-10-25, evening)
+
+| Planned | State |
+|---|---|
+| Task manager: Nav2 Simple Commander + state machine | Done (`hcw_task`; design in `docs/07`, results in `docs/08`) |
+| Verification rule (expected tag seen consistently before pickup) | Done (`hcw_perception/verifier.py`, 8 unit tests) |
+| Simulated attach and release | Done (simulated magnet: the container model follows the robot) |
+| Wrong or missing container handling (wait, retry, report) | Done, tested |
+| First complete task end to end | Done on 2026-10-25 |
+| 20 to 30 repeated runs, success rate, times, failures and causes | Done: 30 of 30 normal tasks, 6 of 6 fault cases correct (`docs/09_Week4_Results.md`) |
+| Documentation | Mostly done; still open: demo script, hospital-model ideas, log-template files (David), reproducibility check by a second person |
+| Mentor update | Draft: `docs/10_Progress_Update_Weeks3-4.md` |
 
 ### Overall
 Weeks 1 and 2 are complete, with about 15 days left to Nov 8 for weeks 3 and 4 (task manager, verification,
 attach and release, failure handling, 20 to 30 repeated runs, documentation). That is on schedule, with little buffer.
 The schedule document allows 3 to 5 weeks, so the realistic range ends around Nov 22.
-In the roadmap below, steps 2 to 6 are done and step 7 is partly done (containers only; bins, obstacles and beds
-are not added). Step 1 (send the update), step 8 (verification node) and steps 9 onward remain.
+In the roadmap below, steps 2 to 6 and 8 to 12 are done and step 7 is partly done (containers only; bins, obstacles and beds
+are not added). Still open: step 1 (send the update to the mentor), step 13 (documentation: demo script, reproducibility check)
+and step 14 (buffer and review meeting). The baseline is about two weeks ahead of the Nov 8 target.
 
 ## 7. Roadmap: what is left (in order)
 

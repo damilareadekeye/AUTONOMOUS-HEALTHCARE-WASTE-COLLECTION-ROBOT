@@ -1,0 +1,37 @@
+run_id,date,collection_point,wrong_container,obstacle,success,time_navigate_s,time_verify_s,time_transport_s,failure_cause,notes
+56,2026-10-25 18:58:54,A,no,no,yes,38.6,0.6,45.8,,batch normal 1
+57,2026-10-25 19:02:20,A,no,no,yes,39.2,0.4,46.3,,batch normal 2
+58,2026-10-25 19:05:37,A,no,no,yes,38.9,0.5,46.2,,batch normal 3
+59,2026-10-25 19:08:44,A,no,no,yes,38.6,0.5,46.7,,batch normal 4
+60,2026-10-25 19:11:56,A,no,no,yes,39.4,0.5,45.8,,batch normal 5
+61,2026-10-25 19:15:28,A,no,no,yes,38.1,0.5,46.8,,batch normal 6
+62,2026-10-25 19:19:21,A,no,no,yes,40.2,0.5,47.5,,batch normal 7
+63,2026-10-25 19:22:45,A,no,no,yes,38.6,0.6,45.7,,batch normal 8
+64,2026-10-25 19:26:06,A,no,no,yes,41.0,0.5,47.0,,batch normal 9
+65,2026-10-25 19:29:49,A,no,no,yes,39.6,0.5,46.3,,batch normal 10
+66,2026-10-25 19:33:22,A,no,no,yes,38.9,0.5,45.6,,batch normal 11
+67,2026-10-25 19:36:53,A,no,no,yes,41.4,0.5,46.7,,batch normal 12
+68,2026-10-25 19:42:04,A,no,no,yes,38.9,0.5,46.0,,batch normal 1
+69,2026-10-25 19:45:31,B,no,no,yes,24.5,0.5,63.0,,batch normal 2
+70,2026-10-25 19:48:57,C,no,no,yes,13.0,0.5,75.9,,batch normal 3
+71,2026-10-25 19:52:04,A,no,no,yes,38.7,0.5,46.2,,batch normal 4
+72,2026-10-25 19:55:37,B,no,no,yes,23.6,0.6,63.4,,batch normal 5
+73,2026-10-25 19:58:49,C,no,no,yes,13.8,0.5,76.4,,batch normal 6
+74,2026-10-25 20:03:29,A,no,no,yes,98.3,0.5,46.7,,batch normal 7
+75,2026-10-25 20:06:54,B,no,no,yes,24.7,0.5,62.1,,batch normal 8
+76,2026-10-25 20:10:13,C,no,no,yes,13.8,0.5,76.4,,batch normal 9
+77,2026-10-25 20:13:20,A,no,no,yes,39.4,0.6,46.1,,batch normal 10
+78,2026-10-25 20:16:33,B,no,no,yes,23.7,0.4,62.9,,batch normal 11
+79,2026-10-25 20:20:26,C,no,no,yes,14.2,0.5,76.1,,batch normal 12
+80,2026-10-25 20:24:02,A,no,no,yes,38.4,0.4,46.7,,batch normal 13
+81,2026-10-25 20:27:49,B,no,no,yes,24.7,0.5,62.6,,batch normal 14
+82,2026-10-25 20:31:07,C,no,no,yes,13.8,0.6,76.2,,batch normal 15
+83,2026-10-25 20:34:48,A,no,no,yes,39.6,0.6,45.2,,batch normal 16
+84,2026-10-25 20:38:00,B,no,no,yes,23.9,0.5,62.1,,batch normal 17
+85,2026-10-25 20:41:54,C,no,no,yes,13.8,0.5,76.2,,batch normal 18
+86,2026-10-25 20:45:12,A,no,no,no,41.1,39.0,0.0,no container tag detected (expected 11),batch fault missing container at A
+87,2026-10-25 20:48:23,A,yes,no,no,88.0,39.0,0.0,"wrong container (tag(s) [12] seen, expected 11)",batch fault wrong container at A
+88,2026-10-25 20:50:24,B,no,no,no,23.5,39.0,0.0,no container tag detected (expected 12),batch fault missing container at B
+89,2026-10-25 20:52:15,B,yes,no,no,23.6,39.0,0.0,"wrong container (tag(s) [13] seen, expected 12)",batch fault wrong container at B
+90,2026-10-25 20:53:54,C,no,no,no,14.5,39.0,0.0,no container tag detected (expected 13),batch fault missing container at C
+91,2026-10-25 20:55:27,C,yes,no,no,13.7,39.0,0.0,"wrong container (tag(s) [11] seen, expected 13)",batch fault wrong container at C

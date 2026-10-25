@@ -1,0 +1,20 @@
+{
+  "task_id": 86,
+  "point": "A",
+  "cause": "verification failed",
+  "expected_tag": 11,
+  "target_status": {
+    "expected_id": 11,
+    "detected_ids": [],
+    "detected": false,
+    "consecutive": 0,
+    "verified": false,
+    "stamp": 3893.56
+  },
+  "amcl_pose": {
+    "x": 13.548,
+    "y": -18.473,
+    "yaw": -0.083
+  },
+  "container_pose_in_gazebo": "Requesting state for world [sim_world]...\n\nModel: [14]\n  - Name: hcw_container_11\n  - Pose [ XYZ (m) ] [ RPY (rad) ]:\n    [5.000000 -45.000000 0.000000]\n    [0.000000 -0.000000 0.000000]"
+}
