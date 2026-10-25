@@ -1,57 +1,59 @@
 # Test Plan — Repeated Simulation Runs (Week 4)
 
 Based on `docs/07_Task_Manager_Design.md`, section 4 (state machine) and section 7 (test
-scenarios). This plan does not contain any results; numbers are filled in only from real runs,
-using `docs/results/run_log_template.csv`.
+scenarios), corrected against the real implementation (`task_manager.py`) and the actual Week 4
+results (`docs/09_Week4_Results.md`). This plan does not contain run results; those are logged
+per run in `~/hcw_ws/results/runs.csv` and summarised in `docs/results/README.md`,
+`docs/results/runs_all_sessions.csv` and `docs/results/runs_final_settings.csv`.
 
 ## How to read this table
 
-- **Set up**: how to produce the scenario in simulation, in words. Items marked "(check)" use a
-  mechanism not fully documented yet and need confirming on the reference machine before the
-  run.
+- **Set up**: how to produce the scenario in simulation, in words.
 - **Expected states**: the state-machine path from `IDLE` the task should take, per doc 07
   section 4.
-- **Expected result**: `COMPLETED` or `FAILED`, and the failure cause in words (the exact
-  `cause` string used in `/hcw/task_status` should be confirmed against the real implementation;
-  `(check)` marks where the wording here is a description, not a guaranteed exact string).
+- **Expected result**: the exact state, result and cause the task manager reports.
 - **Pass rule**: what must be true for the run to count as a pass.
 
 ## Test cases
 
 | ID | Scenario | Set up | Expected states | Expected result | Pass rule |
 |---|---|---|---|---|---|
-| TC01 | Normal task, point A | `ros2 run hcw_task request A` with the simulation, navigation, apriltag and task launches running as normal, correct tag (11) in place at A | IDLE → NAVIGATE_TO_POINT → VERIFY → ATTACH → NAVIGATE_TO_STORAGE → RELEASE → REPORT → RETURN_HOME → IDLE | COMPLETED | Robot reaches A, tag 11 verified, container moves with robot to storage, robot returns home, final state IDLE |
-| TC02 | Normal task, point B | Same as TC01, `request B`, tag 12 in place at B | Same full sequence | COMPLETED | Same as TC01, for B / tag 12 |
-| TC03 | Normal task, point C | Same as TC01, `request C`, tag 13 in place at C | Same full sequence | COMPLETED | Same as TC01, for C / tag 13 |
-| TC04 | Wrong container at a collection point | (check) Launch with `decoy:=True` on `sim_clinic.launch.py` and arrange for tag 14 to be the tag seen at the collection point instead of the correct tag; confirm exact method with reference machine, since tag 14's documented default position is separate from A/B/C. Label the run with `wrong_container:=true` on `task.launch.py` for the CSV | IDLE → NAVIGATE_TO_POINT → VERIFY (fails: wrong tag seen, not the expected one) → wait 3 s, retry, up to 3 attempts → FAILED → RETURN_HOME → IDLE | FAILED, cause: wrong container / expected tag not verified (check exact cause string) | Task never reaches ATTACH; robot ends back at home; magnet never reports attached |
-| TC05 | Wrong container at a different collection point | Same as TC04, repeated at a second collection point for coverage | Same as TC04 | FAILED, same cause type as TC04 | Same as TC04 |
-| TC06 | Missing container at a collection point | `ros2 param set /task_manager reset_container false` before the run, with the container removed/not reset at the collection point (per the comment in `task.launch.py`) | IDLE → NAVIGATE_TO_POINT → VERIFY (no tag detected) → wait 3 s, retry, up to 3 attempts → FAILED → RETURN_HOME → IDLE | FAILED, cause: no container / tag not detected (check exact cause string) | Task never reaches ATTACH; robot ends back at home |
-| TC07 | Missing container at a second collection point | Same as TC06, repeated at a different point for coverage | Same as TC06 | Same as TC06 | Same as TC06 |
-| TC08 | Unstable tag that recovers | (check) Briefly block or cover the expected tag for less than 3 retry attempts, then let it be visible again, so the 5-consecutive-frames rule can still be satisfied before the 3-attempt limit is reached | IDLE → NAVIGATE_TO_POINT → VERIFY (one or more failed attempts, then succeeds within 3 retries) → ATTACH → ... → REPORT → RETURN_HOME → IDLE | COMPLETED | Task eventually reaches ATTACH and completes, despite at least one failed verification attempt being logged |
-| TC09 | Unstable tag that never stabilises | (check) Keep the expected tag blocked/covered for the whole verification window, through all 3 retry attempts | IDLE → NAVIGATE_TO_POINT → VERIFY (fails every attempt) → FAILED → RETURN_HOME → IDLE | FAILED, cause: verification timeout / tag never stable (check exact cause string) | Task never reaches ATTACH; all 3 retry attempts are logged as failed |
-| TC10 | Obstacle blocking the corridor to a collection point | (check) Place an obstacle in the corridor between home and a collection point so Nav2 cannot find or complete a path; label the run with `obstacle:=true` on `task.launch.py` for the CSV | IDLE → NAVIGATE_TO_POINT (Nav2 fails to reach the goal) → FAILED → RETURN_HOME (if possible) → IDLE | FAILED, cause: Nav2 navigation failure (check exact cause string) | Task never reaches VERIFY; failure is logged with a navigation-related cause |
-| TC11 | Obstacle blocking the corridor to storage | (check) Same mechanism as TC10, but the obstacle is placed between the collection point and storage, after a successful pickup | IDLE → NAVIGATE_TO_POINT → VERIFY → ATTACH → NAVIGATE_TO_STORAGE (Nav2 fails) → FAILED (magnet released per the FAILED-state rule) → RETURN_HOME → IDLE | FAILED, cause: Nav2 navigation failure to storage (check exact cause string) | Task reaches ATTACH but not RELEASE; magnet is released as part of the FAILED-state handling rather than left attached |
-| TC12 | Task request while busy | (check) Send a second `request` while a task is already in a non-IDLE state; exact handling (ignored, queued, or rejected) is not specified in doc 07 and needs confirming on the reference machine | Whatever the implementation defines; not specified in doc 07 | To be confirmed against the implementation (check) | The first task's run is not corrupted or interrupted by the second request; the behaviour matches whatever the reference machine confirms is intended |
-| TC13 | Invalid task request | `ros2 topic pub --once /hcw/task_request std_msgs/msg/String "data: 'D'"` (an unknown point, not A/B/C) while the system is IDLE | Stays in IDLE, or reports FAILED immediately depending on implementation (check) | No unsafe motion, no attempt to navigate to an undefined point | Robot does not move; the invalid request does not crash the task manager |
+| TC01 | Normal task, point A | `ros2 run hcw_task request A`, correct tag (11) in place at A | IDLE → NAVIGATE_TO_POINT → VERIFY → ATTACH → NAVIGATE_TO_STORAGE → RELEASE → REPORT → RETURN_HOME → IDLE | COMPLETED | Robot reaches A, tag 11 verified, container moves with robot to storage, robot returns home |
+| TC02 | Normal task, point B | Same as TC01, `request B`, tag 12 at B | Same full sequence | COMPLETED | Same as TC01, for B / tag 12 |
+| TC03 | Normal task, point C | Same as TC01, `request C`, tag 13 at C | Same full sequence | COMPLETED | Same as TC01, for C / tag 13 |
+| TC04 | Wrong container at A | `ros2 param set /task_manager reset_container false`, then move tag 12's container into A's place. Confirmed working: run 87, tag 12 at A | IDLE → NAVIGATE_TO_POINT → VERIFY (fails) → wait, retry, up to 3 attempts → FAILED → RETURN_HOME → IDLE | FAILED, cause: `wrong container (tag(s) [12] seen, expected 11)` | Task never reaches ATTACH; robot ends back at home |
+| TC05 | Wrong container at B | Same mechanism, tag 13's container into B's place. Confirmed: run 89 | Same as TC04 | FAILED, cause: `wrong container (tag(s) [13] seen, expected 12)` | Same as TC04 |
+| TC05b | Wrong container at C | Same mechanism, tag 11's container into C's place. Confirmed: run 91 | Same as TC04 | FAILED, cause: `wrong container (tag(s) [11] seen, expected 13)` | Same as TC04 |
+| TC06 | Missing container at A | `ros2 param set /task_manager reset_container false`, container removed/not reset at A. Confirmed: run 86 | IDLE → NAVIGATE_TO_POINT → VERIFY (no tag) → wait, retry, up to 3 attempts → FAILED → RETURN_HOME → IDLE | FAILED, cause: `no container tag detected (expected 11)` | Task never reaches ATTACH; robot ends back at home |
+| TC07 | Missing container at B | Same mechanism at B. Confirmed: run 88 | Same as TC06 | FAILED, cause: `no container tag detected (expected 12)` | Same as TC06 |
+| TC07b | Missing container at C | Same mechanism at C. Confirmed: run 90 | Same as TC06 | FAILED, cause: `no container tag detected (expected 13)` | Same as TC06 |
+| TC10 | Obstacle blocking the corridor to a collection point | Place an obstacle in the corridor between home and a collection point. Tested: fails after about 64 s | IDLE → NAVIGATE_TO_POINT (Nav2 fails) → FAILED → RETURN_HOME → IDLE | FAILED, cause: `navigation to the collection point failed` | Task never reaches VERIFY |
+| TC10b | Obstacle that leaves a gap | A box in the corridor that leaves a gap for the robot to drive around. Tested | Normal full sequence, with a detour | COMPLETED | Task completes despite the obstacle |
+| TC11 | Obstacle blocking the corridor to storage | Same mechanism as TC10, obstacle placed between the collection point and storage, after a successful pickup. Not yet tested | IDLE → NAVIGATE_TO_POINT → VERIFY → ATTACH → NAVIGATE_TO_STORAGE (Nav2 fails) → FAILED → RETURN_HOME → IDLE | FAILED, cause: `navigation to storage failed`. The container is put back at its original place, not "released" at storage | Task reaches ATTACH but not RELEASE; container ends back at its original collection point |
+| TC12 | Task request while busy | Send a second `request` while a task is already running. Tested | N/A — first task's run is undisturbed | State `BUSY`, result `REJECTED`, cause `a task is already running`. Rejected, not queued | The first task's run is not disturbed; the second request is cleanly rejected |
+| TC13 | Invalid task request | `ros2 topic pub --once /hcw/task_request std_msgs/msg/String "data: 'Z'"`. Tested | Stays in IDLE | State `IDLE`, result `REJECTED`, cause `invalid request "Z" (use A, B or C)` | Robot does not move |
+| TC14 | Magnet failure (attach) | To be defined — covers `magnet failed to attach: <text>` | Reaches VERIFY, fails at ATTACH | FAILED, cause: `magnet failed to attach: <text>` | Task does not proceed to NAVIGATE_TO_STORAGE |
+| TC15 | Magnet failure (release) | To be defined — covers `magnet failed to release: <text>` | Reaches NAVIGATE_TO_STORAGE, fails at RELEASE | FAILED, cause: `magnet failed to release: <text>` | Task does not reach REPORT as COMPLETED |
 
-## Run count
+Not included as simulation test cases: an unstable tag that briefly recovers or never stabilises.
+This cannot be reliably produced in the simulation and is instead covered by the unit test
+`src/hcw_perception/test/test_verifier_rule.py`.
 
-13 test cases above. To reach the 20 to 30 total repeated runs required for Week 4, repeat the
-three normal cases (TC01 to TC03) two to three times each, and run every other case at least
-once:
+## Run count (actual, final settings)
 
-- TC01, TC02, TC03: 3 runs each (9 runs) — repetition checks reliability of the normal path
-- TC04 to TC13: 1 to 2 runs each (10 to 20 runs) — at least one run per case, with the most
-  safety-relevant cases (TC09, TC10, TC11) run twice if time allows
-
-This gives a total in the 19 to 29 range, inside the 20 to 30 target once the higher end of the
-repeat counts is used.
+The real final batch (`docs/09_Week4_Results.md`) covers **30 normal tasks** (A 18, B 6, C 6,
+all COMPLETED) plus **6 fault cases** (3 missing-container, 3 wrong-container, one at each of A,
+B, C, all FAILED with the correct cause), for **36 runs total**. This exceeds the original 20 to
+30 target. Earlier batches under looser Nav2 settings (runs 20-55) showed intermittent failures
+at point A that were root-caused and fixed (tighter goal tolerance, realign retry); see
+`docs/09_Week4_Results.md` section 2 for that history. TC11, TC14 and TC15 are not yet covered by
+a real run and remain open for a future test session.
 
 ## Notes
 
-- No results are recorded in this document. Actual outcomes are logged per run in
-  `docs/results/run_log_template.csv` (Beni's Task 2) and summarised afterward.
-- Several "Set up" and "cause" entries are marked (check) because the exact mechanism or exact
-  status string is not fully specified in the docs available at the time this plan was written.
-  These should be confirmed and, if needed, corrected by whoever runs the tests on the reference
-  machine before relying on this plan during the actual test sessions.
+- Results are not recorded in this document. See `docs/results/README.md` for where the real
+  data lives and how success rates are computed.
+- TC08 and TC09 (unstable tag) were removed from the simulation test cases and are covered by a
+  unit test instead.
+- A 100% success rate on these runs does not mean the system never fails; see
+  `docs/09_Week4_Results.md` section 4 for the statistical caveat.
