@@ -43,3 +43,27 @@ run_id,date,collection_point,wrong_container,obstacle,success,time_navigate_s,ti
 41,2026-10-25 18:03:45,B,yes,no,no,24.0,39.0,0.0,no container tag detected (expected 12),batch fault wrong container at B
 42,2026-10-25 18:05:22,C,no,no,no,12.8,39.0,0.0,no container tag detected (expected 13),batch fault missing container at C
 43,2026-10-25 18:06:56,C,yes,no,no,13.7,39.0,0.0,"wrong container (tag(s) [11] seen, expected 13)",batch fault wrong container at C
+44,2026-10-25 18:17:47,A,no,no,yes,38.5,0.4,45.8,,batch normal 1
+45,2026-10-25 18:21:33,A,no,no,yes,39.6,0.5,45.7,,batch normal 2
+46,2026-10-25 18:25:04,A,no,no,yes,38.7,0.6,47.1,,batch normal 3
+47,2026-10-25 18:28:23,A,no,no,yes,39.1,0.5,44.8,,batch normal 4
+48,2026-10-25 18:31:50,A,no,no,yes,39.2,0.5,45.6,,batch normal 5
+49,2026-10-25 18:35:18,A,no,no,yes,39.0,0.6,45.7,,batch normal 6
+50,2026-10-25 18:38:31,A,no,no,yes,38.7,0.5,44.8,,batch normal 7
+51,2026-10-25 18:41:47,A,no,no,no,39.0,39.0,0.0,no container tag detected (expected 11),batch normal 8
+52,2026-10-25 18:44:02,A,no,no,yes,39.4,0.5,44.4,,batch normal 9
+53,2026-10-25 18:47:40,A,no,no,yes,39.4,0.6,44.1,,batch normal 10
+54,2026-10-25 18:51:11,A,no,no,yes,38.7,0.4,44.8,,batch normal 11
+55,2026-10-25 18:54:18,A,no,no,no,40.3,39.0,0.0,no container tag detected (expected 11),batch normal 12
+56,2026-10-25 18:58:54,A,no,no,yes,38.6,0.6,45.8,,batch normal 1
+57,2026-10-25 19:02:20,A,no,no,yes,39.2,0.4,46.3,,batch normal 2
+58,2026-10-25 19:05:37,A,no,no,yes,38.9,0.5,46.2,,batch normal 3
+59,2026-10-25 19:08:44,A,no,no,yes,38.6,0.5,46.7,,batch normal 4
+60,2026-10-25 19:11:56,A,no,no,yes,39.4,0.5,45.8,,batch normal 5
+61,2026-10-25 19:15:28,A,no,no,yes,38.1,0.5,46.8,,batch normal 6
+62,2026-10-25 19:19:21,A,no,no,yes,40.2,0.5,47.5,,batch normal 7
+63,2026-10-25 19:22:45,A,no,no,yes,38.6,0.6,45.7,,batch normal 8
+64,2026-10-25 19:26:06,A,no,no,yes,41.0,0.5,47.0,,batch normal 9
+65,2026-10-25 19:29:49,A,no,no,yes,39.6,0.5,46.3,,batch normal 10
+66,2026-10-25 19:33:22,A,no,no,yes,38.9,0.5,45.6,,batch normal 11
+67,2026-10-25 19:36:53,A,no,no,yes,41.4,0.5,46.7,,batch normal 12

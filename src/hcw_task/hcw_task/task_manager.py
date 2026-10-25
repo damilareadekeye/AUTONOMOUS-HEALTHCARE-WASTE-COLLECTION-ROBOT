@@ -242,6 +242,11 @@ class TaskManager(Node):
                 break
             ids = self.target.get('detected_ids', [])
             wrong = bool([i for i in ids if i != tag])
+            if attempt < VERIFY_ATTEMPTS:
+                # Realign: the tag can sit at the edge of the camera view if the robot stopped slightly
+                # off its heading (seen at point A). Send the same Nav2 goal again, then wait and retry.
+                self.publish_status('VERIFY', cause='realigning before attempt %d' % (attempt + 1))
+                self.navigate(place)
             self.spin_for(VERIFY_WAIT)
         t_verify = self.now() - t0
         self.expected_pub.publish(Int32(data=0))
