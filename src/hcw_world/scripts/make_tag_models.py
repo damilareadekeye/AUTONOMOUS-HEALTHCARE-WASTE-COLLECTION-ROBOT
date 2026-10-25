@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Gazebo container models (a yellow bin with an AprilTag on its +X face).
+"""Generate the Gazebo container models (a coloured bin with an AprilTag on its +X face).
 
     python3 src/hcw_world/scripts/make_tag_models.py
 
@@ -17,6 +17,16 @@ TAG_SIZE = 0.30          # m, black square side (the white border is extra)
 BIN = (0.40, 0.40, 0.60)  # m: x, y, z of the container
 TAG_CENTER_Z = 0.30      # m above the floor (the TurtleBot camera is at about this height)
 
+# Per-tag bin colour (R, G, B), 0-1 range. Keeps A, B, C visibly distinct and makes the
+# wrong container (14) clearly different from all three correct ones.
+COLORS = {
+    11: (0.10, 0.30, 0.90),   # collection A - blue
+    12: (0.10, 0.70, 0.20),   # collection B - green
+    13: (0.90, 0.55, 0.10),   # collection C - orange
+    14: (0.85, 0.10, 0.10),   # wrong container - red
+}
+DEFAULT_COLOR = (0.95, 0.80, 0.10)   # fallback (original yellow) for any id not listed above
+
 SDF = """<?xml version="1.0"?>
 <sdf version="1.9">
   <model name="hcw_container_{id}">
@@ -30,8 +40,8 @@ SDF = """<?xml version="1.0"?>
         <pose>0 0 {hz} 0 0 0</pose>
         <geometry><box><size>{bx} {by} {bz}</size></box></geometry>
         <material>
-          <ambient>0.95 0.8 0.1 1</ambient>
-          <diffuse>0.95 0.8 0.1 1</diffuse>
+          <ambient>{cr} {cg} {cb} 1</ambient>
+          <diffuse>{cr} {cg} {cb} 1</diffuse>
         </material>
       </visual>
       <visual name="tag{id}">
@@ -77,9 +87,11 @@ def main():
         img = tag_image(tag_id)
         cv2.imwrite(os.path.join(d, 'materials', 'textures', 'tag%d.png' % tag_id), img)
         total = TAG_SIZE * img.shape[0] / (img.shape[0] - 2 * 40)   # plane size incl. white border
+        cr, cg, cb = COLORS.get(tag_id, DEFAULT_COLOR)
         with open(os.path.join(d, 'model.sdf'), 'w') as f:
             f.write(SDF.format(id=tag_id, bx=BIN[0], by=BIN[1], bz=BIN[2], hz=BIN[2] / 2,
-                               tx=BIN[0] / 2 + 0.001, tz=TAG_CENTER_Z, ts=round(total, 4)))
+                               tx=BIN[0] / 2 + 0.001, tz=TAG_CENTER_Z, ts=round(total, 4),
+                               cr=cr, cg=cg, cb=cb))
         with open(os.path.join(d, 'model.config'), 'w') as f:
             f.write(CONFIG.format(id=tag_id))
         print('wrote', d)
