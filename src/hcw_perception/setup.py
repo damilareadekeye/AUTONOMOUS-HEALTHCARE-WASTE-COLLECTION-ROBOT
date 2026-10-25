@@ -22,6 +22,7 @@ setup(
     entry_points={
         'console_scripts': [
             'tag_monitor = hcw_perception.tag_monitor:main',
+            'verifier = hcw_perception.verifier:main',
         ],
     },
 )

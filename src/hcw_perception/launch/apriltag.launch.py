@@ -3,7 +3,8 @@
     ros2 launch hcw_perception apriltag.launch.py
 
 Publishes /detections (apriltag_msgs/AprilTagDetectionArray) and a TF frame per tag
-(tag_A, tag_B, tag_C, tag_wrong). It only observes: it never publishes motor commands.
+(tag_A, tag_B, tag_C, tag_wrong) and starts the verifier node (/perception/target_status).
+It only observes: it never publishes motor commands.
 """
 import os
 
@@ -19,4 +20,6 @@ def generate_launch_description():
         parameters=[config, {'use_sim_time': True}],
         remappings=[('image_rect', '/rgbd_camera/image'),
                     ('camera_info', '/rgbd_camera/camera_info')])
-    return LaunchDescription([apriltag])
+    verifier = Node(package='hcw_perception', executable='verifier', name='verifier', output='screen',
+                    parameters=[{'use_sim_time': True}])
+    return LaunchDescription([apriltag, verifier])
