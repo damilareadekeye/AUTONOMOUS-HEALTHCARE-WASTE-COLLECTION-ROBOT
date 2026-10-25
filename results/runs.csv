@@ -19,3 +19,27 @@ run_id,date,collection_point,wrong_container,obstacle,success,time_navigate_s,ti
 17,2026-10-25 16:41:23,A,no,no,yes,37.7,0.5,44.9,,scenario recovery after block
 18,2026-10-25 16:44:40,A,no,no,yes,39.4,2.0,44.3,,scenario flickering tag
 19,2026-10-25 16:48:36,A,no,no,yes,38.2,2.0,45.7,,scenario flickering tag fast
+20,2026-10-25 16:57:07,A,no,no,yes,38.9,0.5,45.2,,batch normal 1
+21,2026-10-25 17:00:55,B,no,no,yes,24.7,0.5,61.1,,batch normal 2
+22,2026-10-25 17:04:48,C,no,no,yes,13.0,0.5,76.3,,batch normal 3
+23,2026-10-25 17:08:03,A,no,no,yes,39.1,0.5,46.6,,batch normal 4
+24,2026-10-25 17:11:29,B,no,no,yes,23.5,0.5,63.0,,batch normal 5
+25,2026-10-25 17:14:44,C,no,no,yes,12.4,0.5,75.7,,batch normal 6
+26,2026-10-25 17:18:13,A,no,no,no,39.5,39.0,0.0,no container tag detected (expected 11),batch normal 7
+27,2026-10-25 17:20:30,B,no,no,yes,23.9,0.5,62.5,,batch normal 8
+28,2026-10-25 17:23:57,C,no,no,yes,13.1,0.5,75.8,,batch normal 9
+29,2026-10-25 17:27:16,A,no,no,yes,38.6,0.5,45.6,,batch normal 10
+30,2026-10-25 17:30:23,B,no,no,yes,23.5,0.5,61.2,,batch normal 11
+31,2026-10-25 17:33:34,C,no,no,yes,13.0,0.5,76.4,,batch normal 12
+32,2026-10-25 17:37:23,A,no,no,yes,39.9,0.4,45.3,,batch normal 13
+33,2026-10-25 17:40:53,B,no,no,yes,23.8,0.5,61.4,,batch normal 14
+34,2026-10-25 17:44:27,C,no,no,yes,13.6,0.5,75.7,,batch normal 15
+35,2026-10-25 17:47:39,A,no,no,yes,38.6,0.5,44.5,,batch normal 16
+36,2026-10-25 17:51:01,B,no,no,yes,24.0,0.5,62.5,,batch normal 17
+37,2026-10-25 17:54:20,C,no,no,yes,13.1,0.6,76.1,,batch normal 18
+38,2026-10-25 17:57:29,A,no,no,no,38.6,39.0,0.0,no container tag detected (expected 11),batch fault missing container at A
+39,2026-10-25 17:59:53,A,yes,no,no,39.6,39.0,0.0,"wrong container (tag(s) [12] seen, expected 11)",batch fault wrong container at A
+40,2026-10-25 18:01:58,B,no,no,no,24.3,39.0,0.0,no container tag detected (expected 12),batch fault missing container at B
+41,2026-10-25 18:03:45,B,yes,no,no,24.0,39.0,0.0,no container tag detected (expected 12),batch fault wrong container at B
+42,2026-10-25 18:05:22,C,no,no,no,12.8,39.0,0.0,no container tag detected (expected 13),batch fault missing container at C
+43,2026-10-25 18:06:56,C,yes,no,no,13.7,39.0,0.0,"wrong container (tag(s) [11] seen, expected 13)",batch fault wrong container at C

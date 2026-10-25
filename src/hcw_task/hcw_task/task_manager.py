@@ -17,14 +17,19 @@ import csv
 import json
 import math
 import os
+import subprocess
 import time
 
+import cv2
+import numpy as np
 import rclpy
 import yaml
 from ament_index_python.packages import get_package_share_directory
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
+from sensor_msgs.msg import Image
 from std_msgs.msg import Int32, String
 
 POINTS = {'A': 'collection_A', 'B': 'collection_B', 'C': 'collection_C'}
@@ -65,6 +70,10 @@ class TaskManager(Node):
         self.create_subscription(String, '/hcw/task_request', self.on_request, 10)
         self.create_subscription(String, '/perception/target_status', self.on_target, 10)
         self.create_subscription(String, '/magnet/status', self.on_magnet, 10)
+        self.last_image = None
+        self.amcl = {}
+        self.create_subscription(Image, '/rgbd_camera/image', self.on_image, qos_profile_sensor_data)
+        self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self.on_amcl, 10)
         self.navigator = BasicNavigator()
         self.info = {}
 
@@ -86,6 +95,15 @@ class TaskManager(Node):
         if self.busy or self.queue:
             return self.publish_status('BUSY', 'REJECTED', 'a task is already running', point=point)
         self.queue.append(point)
+
+    def on_image(self, msg):
+        self.last_image = msg
+
+    def on_amcl(self, msg):
+        p = msg.pose.pose
+        q = p.orientation
+        self.amcl = {'x': round(p.position.x, 3), 'y': round(p.position.y, 3),
+                     'yaw': round(math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)), 3)}
 
     def on_target(self, msg):
         try:
@@ -142,6 +160,30 @@ class TaskManager(Node):
                 self.navigator.cancelTask()
                 break
         return self.navigator.getResult() == TaskResult.SUCCEEDED
+
+    def save_incident(self, tag, cause):
+        """When verification fails, keep evidence: camera frame, robot pose, container position, tag status.
+
+        Written to ~/hcw_ws/results/incidents/task_<id>_<time>/ (not committed). Never raises.
+        """
+        try:
+            folder = os.path.expanduser('~/hcw_ws/results/incidents/task_%d_%s' % (self.task_id, time.strftime('%H%M%S')))
+            os.makedirs(folder, exist_ok=True)
+            info = {'task_id': self.task_id, 'point': self.info.get('point'), 'cause': cause,
+                    'expected_tag': tag, 'target_status': self.target, 'amcl_pose': self.amcl}
+            out = subprocess.run(['gz', 'model', '-m', 'hcw_container_%d' % tag, '-p'], capture_output=True,
+                                 text=True, timeout=8)
+            info['container_pose_in_gazebo'] = out.stdout.strip()
+            with open(os.path.join(folder, 'incident.json'), 'w') as f:
+                json.dump(info, f, indent=2)
+            if self.last_image is not None:
+                m = self.last_image
+                img = np.frombuffer(m.data, np.uint8).reshape(m.height, m.width, -1)
+                cv2.imwrite(os.path.join(folder, 'camera.png'),
+                            cv2.cvtColor(img, cv2.COLOR_RGB2BGR) if m.encoding == 'rgb8' else img)
+            self.get_logger().info('incident saved in %s' % folder)
+        except Exception as e:  # diagnostics must never break a task
+            self.get_logger().warn('could not save incident: %s' % e)
 
     def log_csv(self, success, cause, t_nav, t_verify, t_transport):
         folder = os.path.expanduser('~/hcw_ws/results')
@@ -204,6 +246,7 @@ class TaskManager(Node):
         t_verify = self.now() - t0
         self.expected_pub.publish(Int32(data=0))
         if not verified:
+            self.save_incident(tag, 'verification failed')
             return fail('wrong container (tag(s) %s seen, expected %d)' % (self.target.get('detected_ids'), tag)
                         if wrong else 'no container tag detected (expected %d)' % tag)
 

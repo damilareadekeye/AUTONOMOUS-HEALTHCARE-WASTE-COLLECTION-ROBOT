@@ -37,11 +37,11 @@ reset_all() { ros2 topic pub --once /magnet/command std_msgs/msg/String "{data: 
 task() { timeout 900 ros2 run hcw_task request "$1" 2>&1 | grep -E "COMPLETED|FAILED|REJECTED" | tail -1; }
 note() { ros2 param set /task_manager notes "$1" >/dev/null 2>&1; }   # no colon in the text: the CLI would read it as YAML
 
-POINTS=(A B C)
+POINTS=(${POINTS:-A B C})    # e.g. POINTS="A" scripts/run_batch.sh 12  (only point A)
 say "batch: $N normal tasks$([ $FAILURES = 1 ] && echo ' + 6 fault cases'), first run id $FIRST"
 reset_all; ros2 param set /task_manager reset_container true >/dev/null 2>&1
 for i in $(seq 1 "$N"); do
-  p=${POINTS[$(( (i-1) % 3 ))]}
+  p=${POINTS[$(( (i-1) % ${#POINTS[@]} ))]}
   note "batch normal $i"
   say "normal task $i of $N at $p"
   say "  -> $(task $p)"
