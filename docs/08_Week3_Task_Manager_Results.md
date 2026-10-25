@@ -60,6 +60,24 @@ does not record whether the home leg itself succeeded; each following task start
   The robot stands 1.8 m from the container when it attaches ("magnet range" 2.5 m), because the doorways are blocked on the map.
 - **Wrong-container test** was set up by moving container 13 to A's place, not by the decoy model (tag 14).
 
+## 4b. Automated batch check (2026-10-25, `scripts/start_stack.sh` then `scripts/run_batch.sh 1 --with-failures`)
+
+The first attempt was invalid and was discarded: `clean_sims.sh` did not stop the task manager and magnet of an earlier run, so two
+copies answered the same request. The script now stops them. Clean rerun, all started by the scripts, no manual steps:
+
+| Task | Case | Result | Cause reported |
+|---|---|---|---|
+| 7 | Normal, A | COMPLETED (navigate 38.6 s, verify 0.5 s, transport 45.4 s) | |
+| 8 | Missing container, A | FAILED as designed | no container tag detected (expected 11) |
+| 9 | Wrong container, A (tag 12 in its place) | FAILED as designed | wrong container (tag [12] seen, expected 11) |
+| 10 | Missing container, B | FAILED as designed | no container tag detected (expected 12) |
+| 11 | Wrong container, B (tag 13) | FAILED as designed | wrong container (tag [13] seen, expected 12) |
+| 12 | Missing container, C | FAILED as designed | no container tag detected (expected 13) |
+| 13 | Wrong container, C (tag 11) | FAILED as designed | wrong container (tag [11] seen, expected 13) |
+
+Whole batch about 15 minutes (a normal task about 3.2 minutes, a fault case about 1.5 to 2 minutes). Runs 1 to 6 in `runs.csv` are from the
+first session today. For the 20 to 30 runs use `scripts/run_batch.sh 18 --with-failures` (about 1.5 hours, unattended).
+
 ## 5. Controls for testing (reference machine)
 
 | Control | Command |

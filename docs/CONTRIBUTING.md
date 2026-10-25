@@ -98,6 +98,14 @@ simulation and Nav2 (copy from `docs/05_Mapping_Navigation_Perception.md`), what
 robot; in the simulation it is modelled by moving the container with the robot"), and what to say if something fails.
 Files: `docs/demo_script.md`. Run time: about 1 hour.
 
+### Task 9 (David): plain-language glossary ("what are we building?")
+Write `docs/GLOSSARY.md` for a reader who has never used ROS: one short paragraph (3 to 5 sentences, no jargon
+without an explanation) for each of: ROS 2, Gazebo, simulation, TurtleBot 4, LiDAR, map, SLAM, localisation (AMCL), Nav2,
+AprilTag, camera, task manager / state machine, the magnet, real-time factor, and a final section "how one task flows"
+that follows `docs/07_Task_Manager_Design.md` in 8 plain sentences. Base it only on the docs in this repository;
+if a sentence is a guess, mark it with "(check)" for the reference-machine agent. It helps the demo and everyone's
+understanding. Files: `docs/GLOSSARY.md`. Run time: about 1.5 hours.
+
 ### Task 6 (all): the team page
 Each person adds one paragraph about their part of the project to `docs/TEAM.md` (name, role, what they
 worked on, what they learned). Each person edits only their own section. Run time: 20 minutes.

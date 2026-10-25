@@ -14,6 +14,9 @@ pkill -f "lib/slam_toolbox"
 pkill -f "lib/apriltag_ros"
 pkill -f "lib/robot_state_publisher"
 pkill -f "lib/rclcpp_components"
+pkill -f "lib/hcw_task"            # task manager and magnet: a second copy answers the same requests
+pkill -f "lib/hcw_perception"      # verifier
+pkill -f "bridge_set_pose"
 sleep 2
 pkill -9 -f "lib/nav2_"
 pkill -9 -f "gz sim"

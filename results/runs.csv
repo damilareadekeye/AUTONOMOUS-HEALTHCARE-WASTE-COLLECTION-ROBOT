@@ -6,3 +6,10 @@ run_id,date,collection_point,wrong_container,obstacle,success,time_navigate_s,ti
 4,2026-10-25 15:14:32,A,no,no,no,38.5,39.0,0.0,"wrong container (tag(s) [13] seen, expected 11)",scenario 4 wrong container
 5,2026-10-25 15:16:53,A,no,no,yes,38.0,0.5,45.2,,scenario 5 normal A after failures
 6,2026-10-25 15:22:44,B,yes,no,yes,22.9,0.6,61.9,,check labels and numbering
+7,2026-10-25 15:57:48,A,no,no,yes,38.6,0.5,45.4,,batch normal 1
+8,2026-10-25 16:01:02,A,no,no,no,38.8,39.0,0.0,no container tag detected (expected 11),batch normal 1
+9,2026-10-25 16:03:25,A,yes,no,no,39.3,39.0,0.0,"wrong container (tag(s) [12] seen, expected 11)",batch normal 1
+10,2026-10-25 16:05:29,B,no,no,no,23.5,39.0,0.0,no container tag detected (expected 12),batch normal 1
+11,2026-10-25 16:07:16,B,yes,no,no,23.0,39.0,0.0,"wrong container (tag(s) [13] seen, expected 12)",batch normal 1
+12,2026-10-25 16:08:51,C,no,no,no,12.8,39.0,0.0,no container tag detected (expected 13),batch normal 1
+13,2026-10-25 16:10:21,C,yes,no,no,13.0,39.0,0.0,"wrong container (tag(s) [11] seen, expected 13)",batch normal 1

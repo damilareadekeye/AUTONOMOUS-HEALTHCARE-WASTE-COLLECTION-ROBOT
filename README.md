@@ -17,6 +17,8 @@ Stack: Ubuntu 24.04 (WSL2) · ROS 2 Jazzy · Gazebo Harmonic · Nav2 · AprilTag
 | Week 2 progress update (draft for the mentor) | [docs/06_Progress_Update_Week2.md](docs/06_Progress_Update_Week2.md) |
 | Week 3 design: task manager, verifier, magnet | [docs/07_Task_Manager_Design.md](docs/07_Task_Manager_Design.md) |
 | Week 3 results and how to run a task | [docs/08_Week3_Task_Manager_Results.md](docs/08_Week3_Task_Manager_Results.md) |
+| **All commands in one file** | [docs/COMMANDS.md](docs/COMMANDS.md) |
+| Team decisions (what we postponed and why) | [docs/DECISIONS.md](docs/DECISIONS.md) |
 | **Full picture of the project, the machine and the roadmap** | [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) |
 | Understand the folders and who owns what | [docs/STRUCTURE.md](docs/STRUCTURE.md) |
 | Install everything on a new machine | [docs/01_Environment_Setup.md](docs/01_Environment_Setup.md) |
