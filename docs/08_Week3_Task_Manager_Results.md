@@ -54,8 +54,8 @@ does not record whether the home leg itself succeeded; each following task start
 - **Repetition:** 6 tasks in this session (4 completed, 2 failed as designed) plus one invalid request. The plan needs 20 to 30
   runs for a success rate; that is Week 4.
 - **Verification time 0.5 s** is the minimum (5 detection messages at about 10 per second). It is not a measure of difficulty.
-- **Not tested:** an obstacle in the corridor; a tag that is covered briefly (unstable detection); a task request while
-  busy (code path exists, no test yet); two tasks in a row without the robot first returning home; Nav2 failing mid-route.
+- **Tested later the same day** (section 4c): obstacle with a gap, blocked corridor, request while busy.
+  **Still not shown in the simulation:** an unstable tag (the rule is unit-tested instead); Nav2 failing mid-route with the container attached.
 - **Magnet realism:** the container floats above the robot while carried and is dropped at the storage bay (x 30.9, y -12.4).
   The robot stands 1.8 m from the container when it attaches ("magnet range" 2.5 m), because the doorways are blocked on the map.
 - **Wrong-container test** was set up by moving container 13 to A's place, not by the decoy model (tag 14).
@@ -77,6 +77,24 @@ copies answered the same request. The script now stops them. Clean rerun, all st
 
 Whole batch about 15 minutes (a normal task about 3.2 minutes, a fault case about 1.5 to 2 minutes). Runs 1 to 6 in `runs.csv` are from the
 first session today. For the 20 to 30 runs use `scripts/run_batch.sh 18 --with-failures` (about 1.5 hours, unattended).
+
+## 4c. Obstacle, busy request and unstable tag (2026-10-25, stack running, started by hand with `scenario` notes in the CSV)
+
+| Task | Case | Result | Detail |
+|---|---|---|---|
+| 14 | Request B while the task for A was running | A COMPLETED; B REJECTED | "a task is already running"; the first task was not disturbed |
+| 15 | 0.6 m box in the corridor (a gap remains), request A | COMPLETED | navigate 42.8 s (about 39 s without the box): Nav2 went around it |
+| 16 | Corridor blocked completely (3.0 m box wall), request A | FAILED as designed | "navigation to the collection point failed" after 64 s; task manager returned to IDLE |
+| 17 | Normal A after the blockage was removed | COMPLETED | recovery works |
+| 18, 19 | Container 11 made to disappear and reappear (about 0.8 s and about 1.2 s cycles) while the robot verified | COMPLETED on attempt 1, verify 2.0 s | **Inconclusive**: the move commands are slow, so the tag was probably visible long enough each time. It does not show that the rule rejects an unstable tag |
+
+The unstable-tag rule is instead tested directly: `src/hcw_perception/test/test_verifier_rule.py` (8 tests, all pass).
+Run: `cd ~/hcw_ws && source scripts/env.sh && python3 -m unittest src/hcw_perception/test/test_verifier_rule.py -v`.
+It checks: 5 consecutive frames verify; 4 frames then a gap, repeated, never verifies; another tag in view blocks it; the wrong tag
+alone does not verify; nothing in view does not verify; changing the expected tag resets the count; not looking never verifies; the JSON status matches.
+
+Still not tested in the simulation: a blocked corridor on the way to storage with the container attached; Nav2 failing during the return home;
+two requests queued back to back (a request while busy is rejected, not queued).
 
 ## 5. Controls for testing (reference machine)
 
