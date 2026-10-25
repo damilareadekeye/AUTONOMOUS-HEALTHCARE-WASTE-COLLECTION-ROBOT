@@ -42,7 +42,7 @@ hcw_ws/
 └── src/                   ROS 2 packages (one folder = one job)
     ├── hcw_bringup/       launch files: start the simulation (and later the full system)
     ├── hcw_world/         clinic world builder (+ our own models later, e.g. AprilTag containers)
-    ├── hcw_navigation/    map, Nav2 + SLAM settings, go_to command maps, Nav2 and SLAM Toolbox settings, named locations
-    ├── hcw_perception/    AprilTag detection camera, AprilTag detection, verification rule
+    ├── hcw_navigation/    saved map, Nav2 and SLAM Toolbox settings, go_to command
+    ├── hcw_perception/    AprilTag detection (verification rule still to do)
     └── hcw_task/          (planned) task manager: Nav2 Simple Commander + state machine
 ```
