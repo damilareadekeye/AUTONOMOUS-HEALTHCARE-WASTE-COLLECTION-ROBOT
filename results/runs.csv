@@ -91,3 +91,8 @@ run_id,date,collection_point,wrong_container,obstacle,success,time_navigate_s,ti
 89,2026-10-25 20:52:15,B,yes,no,no,23.6,39.0,0.0,"wrong container (tag(s) [13] seen, expected 12)",batch fault wrong container at B
 90,2026-10-25 20:53:54,C,no,no,no,14.5,39.0,0.0,no container tag detected (expected 13),batch fault missing container at C
 91,2026-10-25 20:55:27,C,yes,no,no,13.7,39.0,0.0,"wrong container (tag(s) [11] seen, expected 13)",batch fault wrong container at C
+92,2026-11-07 13:50:21,A,no,no,yes,38.6,0.5,46.1,,
+93,2026-11-07 15:29:19,A,no,no,yes,84.1,0.5,46.0,,batch normal 1
+94,2026-11-07 15:37:20,B,no,no,yes,23.2,0.5,62.1,,batch normal 2
+95,2026-11-07 15:45:48,C,no,no,yes,14.1,0.5,75.4,,batch normal 3
+96,2026-11-07 16:24:03,A,no,no,yes,85.2,0.5,45.7,,

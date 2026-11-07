@@ -45,13 +45,13 @@ dispatcher, two fleet managers/adapters, Gazebo, ROS–Gazebo bridge, RViz).
 | Check | Result |
 |---|---|
 | RViz shows the clinic L1 floor plan ("Clinic A & B layout plan") with the Open-RMF navigation graph (blue lanes) at ~30 fps | Pass |
-| Gazebo opens the clinic world (3D) | _To be confirmed (screenshot)_ |
+| Gazebo opens the clinic world (3D) | Pass: via our own launch (`hcw_bringup`), see doc 04 |
 
 Observation: the L1 floor plan contains wide corridors, ~20 consultation rooms, treatment rooms,
 waiting areas, a STORE room and an E-TROLLEY room — a good match for collection points (rooms) and a
 storage point (STORE / E-TROLLEY) in our waste-collection task.
-| Real-time factor | _To be recorded_ |
-| Errors in launch output | _To be checked_ |
+| Real-time factor | Measured with our own launch: see Step 2 below |
+| Errors in launch output | Not checked for the Open-RMF launch (not used further) |
 
 The two rows above ("Real-time factor", "Errors in launch output") were measured through our own launch
 instead (doc 04): the Open-RMF launch itself was not used further.

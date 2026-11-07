@@ -49,6 +49,6 @@ hcw_ws/
     ├── hcw_bringup/       launch files: start the simulation (and later the full system)
     ├── hcw_world/         clinic world builder (+ our own models later, e.g. AprilTag containers)
     ├── hcw_navigation/    saved map, Nav2 and SLAM Toolbox settings, go_to command
-    ├── hcw_perception/    AprilTag detection (verification rule still to do)
+    ├── hcw_perception/    AprilTag detection and the verification rule
     └── hcw_task/          task manager (state machine) and simulated magnet
 ```

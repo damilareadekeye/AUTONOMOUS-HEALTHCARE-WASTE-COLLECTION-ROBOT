@@ -1,6 +1,6 @@
 # Project Structure and Team Guide
 
-Last updated: 2026-10-24
+Last updated: 2026-11-07
 
 ## 1. Folder map
 
@@ -12,27 +12,33 @@ Last updated: 2026-10-24
 │   ├── 01_Environment_Setup.md           install and GPU setup
 │   ├── 02_Atlas_Autonomy_Evaluation.md   evaluation result (rejected)
 │   ├── 03_OpenRMF_Clinic_World_Evaluation.md
-│   ├── STRUCTURE.md                      this file
-│   └── results/                          (later) test runs, tables, plots
+│   ├── STRUCTURE.md                      this file (short guide; the full picture is PROJECT_STRUCTURE.md)
+│   └── results/                          test plan, run logs, results template (results themselves: 09_Week4_Results.md)
 ├── scripts/
 │   ├── env.sh                            source in every terminal
-│   └── clean_sims.sh                     stop all simulations before starting a new one
+│   ├── clean_sims.sh                     stop everything (run before every new start)
+│   ├── start_stack.sh                    start simulation, Nav2, tag detection and task manager
+│   ├── run_batch.sh / summarize_runs.py  unattended repeated runs and their summary
+│   ├── demo_camera.sh                    move the Gazebo window's camera for a demo
+│   └── test_all_places.sh                drive to every named place with tag checks
 └── src/
     ├── hcw_bringup/                      LAUNCH: the one place that starts things
-    │   └── launch/sim_clinic.launch.py       clinic world + TurtleBot 4 + RViz
+    │   ├── launch/sim_clinic.launch.py       clinic world + TurtleBot 4 (+ window, RViz, props on request)
+│   └── hcw_bringup/teleop_arrows.py      drive by hand with the arrow keys
     ├── hcw_world/                        WORLD: clinic world and our own models
     │   ├── hcw_world/world_builder.py        patches the Open-RMF clinic world for our robot
     │   ├── worlds/                           (later) our own world files
-    │   └── models/                           (later) AprilTag containers, collection-point markers
-    ├── hcw_navigation/   (planned)       maps/*.yaml|pgm, nav2 params, named locations
-    ├── hcw_perception/   (planned)       camera + apriltag_ros + verification node
-    └── hcw_task/         (planned)       task manager (Nav2 Simple Commander, state machine)
+    │   ├── config/locations.yaml             named places and container poses (single source of truth)
+│   └── models/                           AprilTag container models (tags 11 to 14)
+    ├── hcw_navigation/                   saved map, Nav2 and SLAM settings, go_to command
+    ├── hcw_perception/                   AprilTag detection and the verification rule
+    └── hcw_task/                         task manager (state machine) and the simulated magnet
 ```
 
 Rule of thumb: **one package = one job**. Launch files live only in `hcw_bringup`.
 Packages depend downwards (`hcw_task` uses navigation and perception; never the reverse).
 
-## 2. How the pieces talk (target design)
+## 2. How the pieces talk
 
 ```
  task request ──► hcw_task (state machine)

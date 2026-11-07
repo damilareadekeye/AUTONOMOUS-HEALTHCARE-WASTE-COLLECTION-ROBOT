@@ -2,6 +2,7 @@
 # Start the whole system in the background: simulation, Nav2, tag detection, task manager.
 #   scripts/start_stack.sh            # no Gazebo window (fast, use for tests and batches)
 #   scripts/start_stack.sh gui        # with the Gazebo window (slower, good for showing the demo)
+#   scripts/start_stack.sh gui props  # also simple hospital-room props (beds, cabinets, chairs); see docs/DECISIONS.md
 # Prints a timestamped line per stage and "STACK READY" at the end (about 1.5 minutes).
 # Logs: /tmp/hcw_launch.log /tmp/hcw_nav.log /tmp/hcw_tags.log /tmp/hcw_task.log
 # Stop everything with: scripts/clean_sims.sh
@@ -11,14 +12,15 @@ say() { echo "[$(date +%H:%M:%S)] $*"; }
 
 bash "/home/damilare/hcw_ws/scripts/clean_sims.sh"
 sleep 3
-GUI=False; [ "$1" = "gui" ] && GUI=True
+GUI=False; PROPS=False
+for a in "$@"; do [ "$a" = "gui" ] && GUI=True; [ "$a" = "props" ] && PROPS=True; done
 
 say "building packages"
 colcon build --symlink-install 2>&1 | tail -1
 source "$HOME/hcw_ws/install/setup.bash"
 
-say "starting simulation (gui:=$GUI)"
-setsid nohup ros2 launch hcw_bringup sim_clinic.launch.py gui:=$GUI > /tmp/hcw_launch.log 2>&1 &
+say "starting simulation (gui:=$GUI props:=$PROPS)"
+setsid nohup ros2 launch hcw_bringup sim_clinic.launch.py gui:=$GUI props:=$PROPS > /tmp/hcw_launch.log 2>&1 &
 n=0; until timeout 8 ros2 topic echo /odom --once >/dev/null 2>&1; do
   sleep 3; n=$((n+1)); [ $n -gt 60 ] && { say "FAILED: the robot never appeared (see /tmp/hcw_launch.log)"; exit 1; }
 done

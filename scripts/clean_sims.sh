@@ -17,6 +17,7 @@ pkill -f "lib/rclcpp_components"
 pkill -f "lib/hcw_task"            # task manager and magnet: a second copy answers the same requests
 pkill -f "lib/hcw_perception"      # verifier
 pkill -f "bridge_set_pose"
+pkill -f "lib/hcw_bringup"       # arrow teleop
 sleep 2
 pkill -9 -f "lib/nav2_"
 pkill -9 -f "gz sim"

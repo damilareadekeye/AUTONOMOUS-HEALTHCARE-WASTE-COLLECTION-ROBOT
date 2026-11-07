@@ -106,12 +106,93 @@ def container_includes(decoy=False):
     return ''.join(out)
 
 
-def build_world(out_path, profile='floor1', containers=True, decoy=False):
+# Rooms that get props. The door of each room is a model in the clinic world; its position is read from there.
+# Curved west-wing rooms (outer column, x about 14 to 16): the room lies east of the door. Straight columns:
+# the door's yaw (+-1.57) tells which side the room is on (checked against the map for the left inner column).
+# Corner and slanted rooms are skipped: their shape is not known.
+_CURVED_ROOMS = (8, 9, 10, 11, 12)           # left outer column
+_ROOM_SIDE = [                                # (side, rooms, direction into the room: +1 east, -1 west)
+    ('left', (2, 3, 4, 5), -1),
+    ('right', (9, 10, 11, 12, 13), +1),
+    ('right', (3, 4, 5), -1),
+]
+
+
+def _consult_doors(text):
+    """[(side, room number, x, y)] for the consulting-room doors of the original world."""
+    pat = re.compile(r'<model name="L1_(left|right)_consult_rm_(\d+)_outer">\s*<pose>([^<]*)</pose>')
+    out = []
+    for m in pat.finditer(text):
+        v = [float(s) for s in m.group(3).split()]
+        out.append((m.group(1), int(m.group(2)), v[0], v[1]))
+    return out
+
+
+def _box(name, size_uv, uv, z, rgb, direction, door):
+    """A box in the room frame: u goes from the door into the room, v is sideways."""
+    x, y = door[0] + direction * uv[0], door[1] + uv[1]
+    return ('<visual name="%s"><pose>%.3f %.3f %.3f 0 0 0</pose><geometry><box><size>%s %s %s</size></box></geometry>'
+            '<material><ambient>%s %s %s 1</ambient><diffuse>%s %s %s 1</diffuse></material></visual>'
+            % ((name, x, y, z) + tuple(size_uv) + tuple(rgb) + tuple(rgb)))
+
+
+def _cyl(name, radius, length, uv, rgb, direction, door):
+    x, y = door[0] + direction * uv[0], door[1] + uv[1]
+    return ('<visual name="%s"><pose>%.3f %.3f %.3f 0 0 0</pose><geometry><cylinder><radius>%s</radius><length>%s</length>'
+            '</cylinder></geometry><material><ambient>%s %s %s 1</ambient><diffuse>%s %s %s 1</diffuse></material></visual>'
+            % ((name, x, y, length / 2.0, radius, length) + tuple(rgb) + tuple(rgb)))
+
+
+def _layout(kind, d, door):
+    """Visuals of one room. Sizes are (along u, along v, height); z is the box centre height."""
+    B = lambda n, s, uv, z, c: _box(n, (s[0], s[1], s[2]), uv, z, c, d, door)
+    if kind == 'office':
+        return [B('desk', (0.6, 1.4, 0.75), (3.5, 0.0), 0.375, (0.60, 0.45, 0.30)),
+                B('monitor', (0.05, 0.45, 0.30), (3.5, 0.0), 0.90, (0.10, 0.10, 0.12)),
+                B('chair', (0.45, 0.45, 0.45), (2.8, 0.0), 0.225, (0.20, 0.25, 0.35)),
+                B('filing', (0.5, 0.4, 1.2), (3.7, 1.2), 0.6, (0.60, 0.62, 0.65)),
+                _cyl('bin', 0.18, 0.5, (2.2, -1.0), (0.95, 0.80, 0.10), d, door)]
+    visuals = [B('bed', (2.0, 0.9, 0.35), (2.7, 0.0), 0.175, (0.92, 0.92, 0.95)),
+               B('blanket', (1.4, 0.9, 0.10), (2.5, 0.0), 0.40, (0.15, 0.40, 0.80)),
+               B('pillow', (0.35, 0.5, 0.10), (3.45, 0.0), 0.40, (1.0, 1.0, 1.0))]
+    if kind == 'treatment':
+        visuals += [_cyl('iv_stand', 0.03, 1.8, (2.2, 0.75), (0.75, 0.75, 0.78), d, door),
+                    B('trolley', (0.5, 0.4, 0.8), (1.9, -0.85), 0.4, (0.70, 0.72, 0.75))]
+    else:                                                       # patient room
+        visuals += [B('cabinet', (0.4, 0.4, 0.6), (3.4, 0.75), 0.3, (0.55, 0.65, 0.60)),
+                    B('chair', (0.4, 0.4, 0.45), (2.2, -0.9), 0.225, (0.55, 0.35, 0.20)),
+                    _cyl('bin', 0.18, 0.5, (3.7, -0.9), (0.95, 0.80, 0.10), d, door)]
+    return visuals
+
+
+def prop_models(doors):
+    """Simple hospital-room props from flat-coloured boxes and cylinders: patient rooms, offices, treatment rooms.
+
+    Visual only (no collision, no physics cost). The robot's LiDAR and camera still see them (tested: the
+    window-only visibility flag does not hide them from the LiDAR), so they are an option (`props:=True`),
+    not part of the tested default world.
+    """
+    by_key = {(side, n): (x, y) for side, n, x, y in doors}
+    rooms = [(('left', n), +1) for n in _CURVED_ROOMS]
+    for side, numbers, d in _ROOM_SIDE:
+        rooms += [((side, n), d) for n in numbers]
+    out = []
+    for i, (key, d) in enumerate(rooms):
+        if key not in by_key:
+            continue
+        kind = ('patient', 'office', 'treatment')[i % 3]
+        out.append('<model name="hcw_prop_%s_%d"><static>true</static><link name="l">%s</link></model>\n'
+                   % (key[0], key[1], ''.join(_layout(kind, d, by_key[key]))))
+    return ''.join(out)
+
+
+def build_world(out_path, profile='floor1', containers=True, decoy=False, props=False):
     """Write the patched world to out_path and return out_path."""
     if profile not in PROFILES:
         raise ValueError('profile must be one of %s' % (PROFILES,))
     with open(clinic_world_path(), encoding='utf-8') as f:
         text = f.read()
+    doors = _consult_doors(text)           # before the door models are removed below
     for pattern in _RMF_PLUGINS:
         text = re.sub(pattern, '', text, flags=re.DOTALL)
     # Every inline model with a joint is a door or a lift. Open-RMF opens them with a plugin we do
@@ -125,6 +206,8 @@ def build_world(out_path, profile='floor1', containers=True, decoy=False):
     text = text[:end] + SENSOR_SYSTEMS + text[end:]
     if containers:
         text = text.replace('</world>', container_includes(decoy) + '  </world>')
+    if props:
+        text = text.replace('</world>', prop_models(doors) + '  </world>')
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(text)
     return out_path

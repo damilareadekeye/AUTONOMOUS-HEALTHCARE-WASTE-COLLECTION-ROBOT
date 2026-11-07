@@ -34,8 +34,9 @@ def _start_simulation(context):
 
     profile = LaunchConfiguration('profile').perform(context)
     decoy = LaunchConfiguration('decoy').perform(context) == 'True'
+    props = LaunchConfiguration('props').perform(context) == 'True'
     world_sdf = build_world(os.path.join(tempfile.gettempdir(), 'hcw_clinic.sdf'), profile,
-                            containers=True, decoy=decoy)
+                            containers=True, decoy=decoy, props=props)
 
     gz_server = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(ros_gz_sim, 'launch', 'gz_sim.launch.py')),
@@ -82,6 +83,8 @@ def generate_launch_description():
         DeclareLaunchArgument('gui', default_value='False',
                               description='True = open the Gazebo window (slows the simulation a lot; '
                                           'you can also open it later with: gz sim -g)'),
+        DeclareLaunchArgument('props', default_value='False',
+                              description='True = add simple hospital-room props (beds, cabinets, chairs). The robot sees them too'),
         DeclareLaunchArgument('decoy', default_value='False',
                               description='True = also place the wrong container (tag 14), for tests'),
         DeclareLaunchArgument('rviz', default_value='False',

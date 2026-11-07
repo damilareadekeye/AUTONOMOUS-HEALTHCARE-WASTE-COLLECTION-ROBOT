@@ -9,7 +9,8 @@ Last updated: 2026-10-25. Every terminal starts with `cd ~/hcw_ws && source scri
 |---|---|---|
 | 1 | `cd ~/hcw_ws && git pull` | Get the latest code |
 | 2 | `scripts/start_stack.sh` | Stops leftovers, builds, starts the simulation, Nav2, tag detection and the task manager. Prints `STACK READY` after about 1.5 minutes |
-| 2b | `scripts/start_stack.sh gui` | Same, with the Gazebo window (about 10 times slower; for showing people) |
+| 2b | `scripts/start_stack.sh gui` | Same, with the Gazebo window (somewhat slower; for showing people: about 75 % of real time when nothing else is running, about 50 % on a busy laptop) |
+| 2c | `scripts/start_stack.sh gui props` | Same, plus simple hospital-room props (beds, desks, IV stands) for a nicer view. Speed is the same within the normal variation; the tested 30/30 results were taken without props |
 | 3 | `ros2 run hcw_task request A` | Do a whole collection from point A (also `B`, `C`, or `request A B C`) |
 | end | `scripts/clean_sims.sh` | Stop everything |
 
@@ -23,7 +24,10 @@ The robot must be at the Home spot when the stack starts. After driving it by ha
 | RViz | start the simulation with `ros2 launch hcw_bringup sim_clinic.launch.py rviz:=True` instead of step 2 |
 | Task states | `ros2 topic echo /hcw/task_status` |
 | What the camera sees (tag ids) | `ros2 run hcw_perception tag_monitor` (prints changes) or `ros2 topic echo /perception/target_status` |
-| Simulation speed (should be about 1.0) | `gz topic -e -t /stats -n 1 \| grep real_time_factor` |
+| Simulation speed with advice (run before a demo) | `bash scripts/check_speed.sh` |
+| Move the Gazebo window's camera | `bash scripts/demo_camera.sh top` (or `west`, `follow`, `robot`) |
+| Stage a failure for a demo | `bash scripts/demo_fault.sh wrong B` or `missing A`, then `ros2 run hcw_task request B`; afterwards `bash scripts/demo_fault.sh reset` |
+| Raw simulation speed (1.0 = real time) | `gz topic -e -t /stats -n 1 \| grep real_time_factor` |
 
 ## 3. Drive the robot by hand (stack not needed, only the simulation)
 
