@@ -10,7 +10,7 @@ Last updated: 2026-10-25. Every terminal starts with `cd ~/hcw_ws && source scri
 | 1 | `cd ~/hcw_ws && git pull` | Get the latest code |
 | 2 | `scripts/start_stack.sh` | Stops leftovers, builds, starts the simulation, Nav2, tag detection and the task manager. Prints `STACK READY` after about 1.5 minutes |
 | 2b | `scripts/start_stack.sh gui` | Same, with the Gazebo window (somewhat slower; for showing people: about 75 % of real time when nothing else is running, about 50 % on a busy laptop) |
-| 2c | `scripts/start_stack.sh gui props` | Same, plus simple hospital-room props (beds, desks, IV stands) for a nicer view. Speed is the same within the normal variation; the tested 30/30 results were taken without props |
+| 2c | `scripts/start_stack.sh gui props` | Same, plus simple hospital-room props (beds, desks, IV stands) for a nicer view. Speed was the same within the normal variation (about 10 % cost on a loaded laptop); the main results were taken without props |
 | 3 | `ros2 run hcw_task request A` | Do a whole collection from point A (also `B`, `C`, or `request A B C`) |
 | end | `scripts/clean_sims.sh` | Stop everything |
 

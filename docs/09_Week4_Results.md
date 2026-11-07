@@ -8,7 +8,7 @@ Raw data: `docs/results/runs_all_sessions.csv` (every logged run) and `docs/resu
 
 | Measure | Result |
 |---|---|
-| **Normal tasks completed** (home, collection point A, B or C, verify, attach, storage, release, report) | **30 of 30 (100 %)**: A 18, B 6, C 6 |
+| **Normal tasks completed** (home, collection point A, B or C, verify, attach, storage, release, report) | **44 of 44 logged tasks (100 %)** under the final settings: A 24, B 10, C 10. 30 of them are the Oct 25 batch (A 18, B 6, C 6); 14 were run on Nov 7 (see section 6) |
 | **Fault cases handled correctly** (missing or wrong container: the task must FAIL with the right cause, put the container back, return home) | **6 of 6** |
 | Time from request to REPORT (normal tasks) | mean 89 s, median 87 s, min 85 s, max 146 s |
 | Time per stage (mean of the 30) | navigate to the collection point 33 s (one run 98 s), verify 0.5 s, transport to storage 56 s |
@@ -57,8 +57,9 @@ box in the corridor that leaves a gap is driven around (completed), and a corrid
   in front of the container; it never enters a room (the doorways are blocked on the map).
 - **Faults were injected by moving container models**, not by real failures of the camera or the robot. The unstable-tag case is
   tested by unit tests of the verification rule, not by a live run.
-- **Sample size.** 30 normal tasks, 6 fault cases. 30 successes in 30 runs supports a true success rate of about 88 % or higher
-  (95 % confidence, exact binomial lower bound), not "never fails".
+- **Sample size.** 30 normal tasks, 6 fault cases. 44 successes in 44 logged runs supports a true success rate of about 93 % or higher
+  (95 % confidence, exact binomial lower bound), not "never fails". Only tasks that finished are logged: tasks that were interrupted
+  because the stack was stopped for another reason are not in the log.
 - **One slow run:** run 74 (A) needed 98 s to reach the collection point instead of about 39 s, then completed. The cause was not
   investigated (probably a Nav2 recovery manoeuvre).
 - **Not tested:** Nav2 failing during the drive to storage with the container attached; more than one task at once (a second request is
@@ -74,3 +75,29 @@ scripts/run_batch.sh 18 --with-failures         # 18 normal tasks + 6 fault case
 python3 scripts/summarize_runs.py --from-run <first run id of the batch>
 ```
 Rows are appended to `~/hcw_ws/results/runs.csv`; `docs/COMMANDS.md` has every other command.
+
+## 6. Re-check on 2026-11-07, after the code changes of that day
+
+On Nov 7 the code and scripts changed (optional props, demo helpers, stricter cleanup). Navigation settings did not change. Re-checks:
+
+| What | Result |
+|---|---|
+| Default setup, window closed, 6 tasks (A, B, C twice each), runs 97 to 102 | **6 of 6 completed**; simulation speed 100 %; navigate 13.8 to 40.2 s (mean 25.9), transport 46 to 76 s |
+| With the optional hospital-room props, window closed, 3 tasks (A, B, C), runs 103 to 105 | **3 of 3 completed**; idle speed 105 % |
+| Other completed tasks that day (runs 92 to 96, window open, with and without props, laptop busy) | 5 of 5 completed |
+| Staged faults | not repeated on Nov 7 (6 of 6 on Oct 25) |
+
+**Speed and the laptop.** The same stack that ran at about 100 % of real time on Oct 25 ran at only about 45 to 58 % on Nov 7, until CapCut
+(a video editor), Chrome tabs and Task Manager were closed: then it was back at 100 % (Windows CPU load 41 % before, 5 % after). With the Gazebo
+window open and nothing else running it ran at 73 to 76 %. For a demo: close other programs, plug in, run `bash scripts/check_speed.sh`.
+
+**Props.** With a loaded laptop, headless idle speed was 58 % without props and 51 % with (about 10 % cost); with the laptop free it was 100 to 105 % either way.
+They stay an optional demo mode (`scripts/start_stack.sh gui props`), off by default.
+
+**Slow trips to point A.** In 4 of the 24 completed tasks at A, reaching the collection point took 84 to 98 s instead of the usual 38 to 41 s (runs 74, 93, 96, 103).
+B (10 tasks) and C (10 tasks) had none. All 4 still completed. In one case the Nav2 log showed four "failed to make progress" events and one recovery spin while the
+machine was loaded (control loop at 10 Hz instead of 20). The cause was not isolated.
+
+**A process bug found and fixed.** A task manager from an earlier run, stuck waiting for Nav2, ignored the normal stop signal and kept running next to the new one, which froze
+two batches (one `ros2 param set` command waited forever). `scripts/clean_sims.sh` now force-kills it, `scripts/start_stack.sh` refuses to start if one is still alive,
+and the batch scripts put time limits on parameter commands. Those two frozen batches produced no logged runs.
