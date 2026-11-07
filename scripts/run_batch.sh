@@ -35,11 +35,11 @@ PY
 }
 reset_all() { ros2 topic pub --once /magnet/command std_msgs/msg/String "{data: 'reset:all'}" >/dev/null 2>&1; sleep 2; }
 task() { timeout 900 ros2 run hcw_task request "$1" 2>&1 | grep -E "COMPLETED|FAILED|REJECTED" | tail -1; }
-note() { ros2 param set /task_manager notes "$1" >/dev/null 2>&1; }   # no colon in the text: the CLI would read it as YAML
+note() { timeout 20 ros2 param set /task_manager notes "$1" >/dev/null 2>&1; }   # no colon in the text: the CLI would read it as YAML
 
 POINTS=(${POINTS:-A B C})    # e.g. POINTS="A" scripts/run_batch.sh 12  (only point A)
 say "batch: $N normal tasks$([ $FAILURES = 1 ] && echo ' + 6 fault cases'), first run id $FIRST"
-reset_all; ros2 param set /task_manager reset_container true >/dev/null 2>&1
+reset_all; timeout 20 ros2 param set /task_manager reset_container true >/dev/null 2>&1
 for i in $(seq 1 "$N"); do
   p=${POINTS[$(( (i-1) % ${#POINTS[@]} ))]}
   note "batch normal $i"
@@ -50,7 +50,7 @@ done
 if [ "$FAILURES" = 1 ]; then
   declare -A TAG=( [A]=11 [B]=12 [C]=13 )
   declare -A OTHER=( [A]=12 [B]=13 [C]=11 )
-  ros2 param set /task_manager reset_container false >/dev/null 2>&1
+  timeout 20 ros2 param set /task_manager reset_container false >/dev/null 2>&1
   for p in A B C; do
     t=${TAG[$p]}; o=${OTHER[$p]}
     home_of() { poses | awk -v t="$1" '$1==t {print $2, $3, $4}'; }
@@ -61,12 +61,12 @@ if [ "$FAILURES" = 1 ]; then
     # wrong container: another container stands in its place
     reset_all; read hx hy hyaw <<< "$(home_of "$t")"
     move "$t" 5.0 -45.0 0.0; move "$o" "$hx" "$hy" "$hyaw"
-    ros2 param set /task_manager wrong_container true >/dev/null 2>&1
+    timeout 20 ros2 param set /task_manager wrong_container true >/dev/null 2>&1
     note "batch fault wrong container at $p"
     say "fault: wrong container at $p"; say "  -> $(task $p)"
-    ros2 param set /task_manager wrong_container false >/dev/null 2>&1
+    timeout 20 ros2 param set /task_manager wrong_container false >/dev/null 2>&1
   done
-  reset_all; ros2 param set /task_manager reset_container true >/dev/null 2>&1
+  reset_all; timeout 20 ros2 param set /task_manager reset_container true >/dev/null 2>&1
 fi
 note ""
 say "batch finished. Summary of this batch:"

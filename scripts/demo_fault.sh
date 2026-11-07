@@ -33,21 +33,21 @@ case "$mode" in
   missing)
     [ -z "${TAG[$point]}" ] && { echo "point must be A, B or C"; exit 2; }
     reset_all
-    ros2 param set /task_manager reset_container false >/dev/null 2>&1
+    timeout 20 ros2 param set /task_manager reset_container false >/dev/null 2>&1
     move "${TAG[$point]}" 5.0 -45.0 0.0
     echo "Container ${TAG[$point]} removed from point $point. Now run:  ros2 run hcw_task request $point" ;;
   wrong)
     [ -z "${TAG[$point]}" ] && { echo "point must be A, B or C"; exit 2; }
     reset_all
-    ros2 param set /task_manager reset_container false >/dev/null 2>&1
+    timeout 20 ros2 param set /task_manager reset_container false >/dev/null 2>&1
     read hx hy hyaw <<< "$(home_pose "${TAG[$point]}")"
     move "${TAG[$point]}" 5.0 -45.0 0.0
     move "${OTHER[$point]}" "$hx" "$hy" "$hyaw"
-    ros2 param set /task_manager wrong_container true >/dev/null 2>&1
+    timeout 20 ros2 param set /task_manager wrong_container true >/dev/null 2>&1
     echo "The container with tag ${OTHER[$point]} now stands at point $point. Now run:  ros2 run hcw_task request $point" ;;
   reset)
-    ros2 param set /task_manager reset_container true >/dev/null 2>&1
-    ros2 param set /task_manager wrong_container false >/dev/null 2>&1
+    timeout 20 ros2 param set /task_manager reset_container true >/dev/null 2>&1
+    timeout 20 ros2 param set /task_manager wrong_container false >/dev/null 2>&1
     reset_all
     echo "All containers are back in their places." ;;
   *) echo "usage: bash scripts/demo_fault.sh missing|wrong A|B|C   or   bash scripts/demo_fault.sh reset"; exit 2 ;;

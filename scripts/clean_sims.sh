@@ -20,6 +20,9 @@ pkill -f "bridge_set_pose"
 pkill -f "lib/hcw_bringup"       # arrow teleop
 sleep 2
 pkill -9 -f "lib/nav2_"
+pkill -9 -f "lib/hcw_task"
+pkill -9 -f "lib/hcw_perception"
+pkill -9 -f "lib/hcw_bringup"
 pkill -9 -f "gz sim"
 ros2 daemon stop >/dev/null 2>&1
 exit 0

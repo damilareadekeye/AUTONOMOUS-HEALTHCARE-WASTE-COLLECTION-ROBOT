@@ -12,6 +12,9 @@ say() { echo "[$(date +%H:%M:%S)] $*"; }
 
 bash "/home/damilare/hcw_ws/scripts/clean_sims.sh"
 sleep 3
+if pgrep -f "lib/hcw_task/task_manager" >/dev/null; then
+  say "FAILED: an old task manager is still running. Run: pkill -9 -f lib/hcw_task, then try again"; exit 1
+fi
 GUI=False; PROPS=False
 for a in "$@"; do [ "$a" = "gui" ] && GUI=True; [ "$a" = "props" ] && PROPS=True; done
 
