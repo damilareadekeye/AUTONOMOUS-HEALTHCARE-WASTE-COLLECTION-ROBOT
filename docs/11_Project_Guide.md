@@ -41,6 +41,7 @@ Every important section has three layers. Read as deep as you need.
 13. Cheat sheet: the numbers and words to remember
 14. What is in the repository (a tour of the files)
 15. Honest limits and future ideas
+16. The presentation, slide by slide
 
 ---
 
@@ -85,6 +86,21 @@ Everything you see in our video is a **simulation**: a virtual robot in a virtua
 | **Radioactive** | Material from nuclear medicine and radiotherapy | Some diagnostic and treatment materials | Radiation. Needs specially trained handling |
 
 **What our robot is meant to carry.** Our proposal is precise about this: the project "will focus specifically on the transportation of properly segregated and securely sealed healthcare-waste containers. The robot will not sort, open, process, or directly manipulate hazardous waste." So the realistic cargo of a robot like ours is **sealed containers** of infectious waste, sharps boxes (closed), and pharmaceutical waste boxes. Radioactive waste and some cytotoxic waste have special rules, so a robot for those would need extra safeguards; we do not claim to cover them.
+
+## The statistics on slide 2, with their sources
+
+All four were checked against WHO or WHO/UNICEF pages on 8 November 2026. Be ready to say where each comes from.
+
+| Figure | What it says | Source |
+|---|---|---|
+| **85% / 15%** | About 85% of the waste produced by health-care activities is general, non-hazardous waste; about 15% is hazardous (infectious, toxic or radioactive) | WHO fact sheet "Health-care waste" |
+| **16 billion** | About 16 billion injections are given worldwide every year, and not all needles and syringes are disposed of safely | WHO fact sheet "Health-care waste" |
+| **30% / 1.8% / 0.3%** | Chance of infection after **one** needle-stick injury from an infected source: hepatitis B about 30%, hepatitis C 1.8%, HIV 0.3% | WHO injection safety fact sheet (revised 2016) and the health-care waste fact sheet |
+| **24% and 71%** | In 2025, 24% of health facilities in sub-Saharan Africa had basic waste management services, against 71% worldwide (59% worldwide in 2015) | WHO/UNICEF Joint Monitoring Programme report on health care facilities 2015-2025, published 18 August 2026 |
+
+> **CAREFUL:** the 30% / 1.8% / 0.3% figures are the risk per single exposure to an infected source, not the chance for every health worker. The 24% / 71% figures are regional and global estimates; the waste-management estimates are based on the countries that have data. We did not find a reliable Rwanda-specific percentage, so do not quote one; say "sub-Saharan Africa" or "worldwide".
+
+> **SAY THIS:** "WHO estimates about 15% of health-care waste is hazardous, and a single needle-stick from an infected source carries about a 30% chance of hepatitis B infection. In the latest WHO and UNICEF report, only 24% of facilities in sub-Saharan Africa had basic waste management in 2025, against 71% worldwide. That is the gap our project addresses, at the transport step."
 
 ## How we use the waste types in the demo
 
@@ -653,4 +669,36 @@ The repository is a ROS 2 workspace. Everything runs on Dami's laptop (WSL2 Ubun
 
 ---
 
-*End of guide. Update this file as the project changes. The copy in `docs/11_Project_Guide.md` is the master; Word and PDF copies are for reading on phones.*
+# Part 16. The presentation, slide by slide
+
+The deck follows a research format: background, problem, what exists, our solution, methods, testing, results, conclusion. The speaker notes for every slide are inside the PowerPoint file (the Notes pane). The three parts below are a suggestion; the team decides who presents which part.
+
+| # | Slide | What it says | Presenter |
+|---|---|---|---|
+| 1 | Cover | Title, team, mentor | 1 |
+| 2 | Background: the scale of the problem | The WHO statistics (previous section) | 1 |
+| 3 | Problem statement | The formal statement and the four problems we identified before building: risky handling, mix-ups, weak records, repetitive work | 1 |
+| 4 | Existing solutions and the gap | Moxi, Aethon TUG/T3, Relay, Rwanda's robots; our focus is the combination of container collection, camera verification, navigation and task management | 1 |
+| 5 | Proposed solution | Aim, five objectives, scope (sealed, already-sorted containers; simulation first) | 2 |
+| 6 | Methodology 1: system design | Task manager, navigation, perception, simulated magnet | 2 |
+| 7 | Methodology 2: environment and map | Open-RMF clinic in Gazebo, SLAM map, named places, tags | 2 |
+| 8 | Methodology 3: task workflow | The seven steps and the safety gate | 2 |
+| 9 | Testing methodology | Unit, integration, end-to-end, fault injection, regression, root-cause analysis | 2 |
+| 10 | Demonstration | The silent video (click once to play) | 3 |
+| 11 | Results | 67 of 67 tasks, 6 of 6 faults, tasks by room | 3 |
+| 12 | Challenges and improvements | Slow trips to A, slow simulation, container in the corridor | 3 |
+| 13 | Conclusion and future work | What we achieved; ideas for next steps | 3 |
+| 14 | Thank you | Questions | 3 |
+
+**Two versions of the deck.** `HCW_Presentation.pptx` has animations (text and cards appear automatically, one after another, with a fade between slides). `HCW_Presentation_NoAnimation.pptx` is identical but with no animations or transitions. If the animations stutter on the presenting laptop, use the no-animation version. In both, **click the video once** on slide 10 to start it.
+
+**Where the files are.** The slides and the video are too large to keep in the code history, so they are attached to a GitHub Release: [Presentation materials (November 2026)](https://github.com/damilareadekeye/AUTONOMOUS-HEALTHCARE-WASTE-COLLECTION-ROBOT/releases/tag/presentation-2026-11). It has the two decks and the demo video. This guide is in `docs/` (PDF, Word and Markdown).
+
+**Before the day**
+1. Open the deck you will use on the presenting laptop and play it in slideshow mode from slide 1 to the end.
+2. Play the video on slide 10 once. Keep `hcw_demo_silent.mp4` on the laptop as a backup.
+3. Each presenter reads their own slides' notes and the matching parts of this guide, then practises the "SAY THIS" boxes aloud.
+
+---
+
+*End of guide. Update this file as the project changes. The Markdown copy in docs/11_Project_Guide.md is the master; the Word and PDF copies are for reading on phones.*

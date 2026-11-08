@@ -63,6 +63,7 @@ TOKEN = re.compile(r'(\*\*.+?\*\*|`.+?`|\*[^*\s][^*]*?\*)')
 
 
 def runs(par, text, size=None, color=None, bold=False):
+    text = re.sub(r'\[([^\]]+)\]\((https?://[^)]+)\)', r'\1 (\2)', text)   # links: show the address in the text
     for part in TOKEN.split(text):
         if not part:
             continue
@@ -189,8 +190,12 @@ while i < len(lines):
     elif ln.startswith('> '):
         callout(ln[2:])
     elif re.match(r'^\d+\.\s', ln):
-        p = doc.add_paragraph(style='List Number')
-        runs(p, re.sub(r'^\d+\.\s', '', ln))
+        # numbered items are written with their own number, so lists never continue counting from an earlier list
+        p = doc.add_paragraph()
+        p.paragraph_format.left_indent = Cm(0.9)
+        p.paragraph_format.first_line_indent = Cm(-0.6)
+        p.paragraph_format.space_after = Pt(3)
+        runs(p, ln)
     elif ln.startswith('- '):
         p = doc.add_paragraph(style='List Bullet')
         runs(p, ln[2:])
