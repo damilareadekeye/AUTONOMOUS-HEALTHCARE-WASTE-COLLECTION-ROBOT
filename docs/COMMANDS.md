@@ -25,7 +25,7 @@ The robot must be at the Home spot when the stack starts. After driving it by ha
 | Task states | `ros2 topic echo /hcw/task_status` |
 | What the camera sees (tag ids) | `ros2 run hcw_perception tag_monitor` (prints changes) or `ros2 topic echo /perception/target_status` |
 | Simulation speed with advice (run before a demo) | `bash scripts/check_speed.sh` |
-| Move the Gazebo window's camera | `bash scripts/demo_camera.sh top` (or `west`, `follow`, `robot`) |
+| Move the Gazebo window's camera | `bash scripts/demo_camera.sh top` (or `west`, `storage`, `follow`, `robot`) |
 | Stage a failure for a demo | `bash scripts/demo_fault.sh wrong B` or `missing A`, then `ros2 run hcw_task request B`; afterwards `bash scripts/demo_fault.sh reset` |
 | Raw simulation speed (1.0 = real time) | `gz topic -e -t /stats -n 1 \| grep real_time_factor` |
 

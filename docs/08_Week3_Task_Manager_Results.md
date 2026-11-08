@@ -56,7 +56,7 @@ does not record whether the home leg itself succeeded; each following task start
 - **Verification time 0.5 s** is the minimum (5 detection messages at about 10 per second). It is not a measure of difficulty.
 - **Tested later the same day** (section 4c): obstacle with a gap, blocked corridor, request while busy.
   **Still not shown in the simulation:** an unstable tag (the rule is unit-tested instead); Nav2 failing mid-route with the container attached.
-- **Magnet realism:** the container floats above the robot while carried and is dropped at the storage bay (x 30.9, y -12.4).
+- **Magnet realism:** the container floats above the robot while carried and is dropped at the storage bay (x 30.9; y -12.4 until 2026-11-07, y -10.95 since 2026-11-08, against the north wall).
   The robot stands 1.8 m from the container when it attaches ("magnet range" 2.5 m), because the doorways are blocked on the map.
 - **Wrong-container test** was set up by moving container 13 to A's place, not by the decoy model (tag 14).
 

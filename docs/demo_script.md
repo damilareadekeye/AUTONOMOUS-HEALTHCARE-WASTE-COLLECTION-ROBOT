@@ -24,7 +24,7 @@ in this prototype; it never opens or handles the waste itself."
 
 **Minute 1 to 2: the world (point at the projector).** "This is a simulated hospital ground floor in Gazebo, built from the Open-RMF clinic.
 The robot is a TurtleBot 4 with a laser scanner and a camera. It starts in the small room at the bottom-left (Home). Along the west corridor there are
-three consulting rooms with a container at the door: blue is A, green is B, orange is C. The storage bay is in the north corridor.
+three consulting rooms with a container at the door: blue is A, green is B, orange is C. The storage bay is in the north corridor, dressed as a hazardous-waste store: amber hazard-striped floor, shelves, warning signs, yellow bins. It is a marked restricted area, not a separate room; say that a dedicated room away from people is the next step.
 Beds, desks and other props in the rooms are decoration for this demo." (Do not claim the props matter for the robot.)
 
 **Minute 2 to 6: one live task.** Say "We ask the robot to collect the container from point A", then type:
@@ -38,7 +38,7 @@ Narrate each line the terminal prints, in plain words:
 | `NAVIGATE_TO_POINT` | "It plans a route with Nav2 on a map we built with SLAM, and drives to room A" |
 | `VERIFY ... attempt 1 of 3` | "Its camera looks for the tag on the container. It must see the right tag, and only that tag, in 5 frames in a row. One noisy frame is not enough" |
 | `ATTACH` | "Verified. The magnet latches the container" |
-| `NAVIGATE_TO_STORAGE` | "It carries it along the corridor to the storage bay. Nav2 avoids obstacles on the way" |
+| `NAVIGATE_TO_STORAGE` | "It carries it along the corridor to the hazardous-waste bay. Nav2 avoids obstacles on the way" (use `bash scripts/demo_camera.sh storage` to show the bay) |
 | `RELEASE`, `REPORT COMPLETED` | "The magnet lets go, the robot reports the task as completed" |
 | `RETURN_HOME`, `IDLE` | "It drives back to Home and waits for the next task" |
 

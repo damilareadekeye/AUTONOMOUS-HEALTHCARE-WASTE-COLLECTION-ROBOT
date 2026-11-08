@@ -2,6 +2,7 @@
 # Move the Gazebo window's camera for a demo (the stack must be running with the window: scripts/start_stack.sh gui).
 #   scripts/demo_camera.sh top        # whole building from above (default)
 #   scripts/demo_camera.sh west       # the west corridor with collection points A, B, C and Home
+#   scripts/demo_camera.sh storage    # the storage bay with its shelves
 #   scripts/demo_camera.sh follow     # follow the robot
 #   scripts/demo_camera.sh robot      # jump to the robot once (no follow)
 #   scripts/demo_camera.sh top 30 -24 55    # custom: x y height of a top-down view
@@ -15,7 +16,8 @@ entity() { gz service -s "$1" --reqtype gz.msgs.StringMsg --reptype gz.msgs.Bool
 case "$mode" in
   top)    pose "${2:-26}" "${3:--24}" "${4:-50}" ;;
   west)   pose 11 -26 22 ;;
+  storage) pose 31 -12 14 ;;
   follow) entity /gui/follow ;;
   robot)  entity /gui/move_to ;;
-  *)      echo "usage: demo_camera.sh top|west|follow|robot  or  top <x> <y> <height>"; exit 2 ;;
+  *)      echo "usage: demo_camera.sh top|west|storage|follow|robot  or  top <x> <y> <height>"; exit 2 ;;
 esac

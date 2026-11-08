@@ -49,3 +49,14 @@ run_id,date,collection_point,wrong_container,obstacle,success,time_navigate_s,ti
 103,2026-11-07 18:39:26,A,no,no,yes,86.4,0.5,46.8,,batch normal 1
 104,2026-11-07 18:43:20,B,no,no,yes,24.2,0.6,62.6,,batch normal 2
 105,2026-11-07 18:46:42,C,no,no,yes,13.7,0.5,76.3,,batch normal 3
+106,2026-11-07 19:14:56,A,no,no,yes,39.2,0.5,45.5,,
+107,2026-11-08 15:20:20,A,no,no,yes,88.5,0.5,47.4,,
+108,2026-11-08 15:44:32,A,no,no,yes,86.3,0.5,46.3,,batch normal 1
+109,2026-11-08 15:47:50,B,no,no,yes,25.2,0.5,62.3,,batch normal 2
+110,2026-11-08 15:51:10,C,no,no,yes,13.6,0.5,76.1,,batch normal 3
+111,2026-11-08 15:55:45,A,no,no,yes,84.9,0.5,46.9,,batch normal 4
+112,2026-11-08 15:59:04,B,no,no,yes,24.1,0.5,63.3,,batch normal 5
+113,2026-11-08 16:02:16,C,no,no,yes,13.8,0.5,75.6,,batch normal 6
+114,2026-11-08 16:07:22,A,no,no,yes,39.9,0.5,46.0,,batch normal 1
+115,2026-11-08 16:10:33,B,no,no,yes,24.4,0.5,64.0,,batch normal 2
+116,2026-11-08 16:13:48,C,no,no,yes,13.7,0.5,76.8,,batch normal 3

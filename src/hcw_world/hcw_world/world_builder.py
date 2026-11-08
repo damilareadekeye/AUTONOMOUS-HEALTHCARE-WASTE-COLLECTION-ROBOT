@@ -183,7 +183,63 @@ def prop_models(doors):
         kind = ('patient', 'office', 'treatment')[i % 3]
         out.append('<model name="hcw_prop_%s_%d"><static>true</static><link name="l">%s</link></model>\n'
                    % (key[0], key[1], ''.join(_layout(kind, d, by_key[key]))))
+    out.append(_storage_area())
     return ''.join(out)
+
+
+# North wall of the storage bay (y, from the saved map: solid for x from 26 to 34.5).
+_NORTH_WALL_Y = -10.63
+
+
+def _vbox(name, size, xyz, rgb):
+    """A box at a world position, flat colour, visual only."""
+    return ('<visual name="%s"><pose>%.3f %.3f %.3f 0 0 0</pose><geometry><box><size>%s %s %s</size></box></geometry>'
+            '<material><ambient>%s %s %s 1</ambient><diffuse>%s %s %s 1</diffuse></material></visual>'
+            % ((name,) + tuple(xyz) + tuple(size) + tuple(rgb) + tuple(rgb)))
+
+
+def _vcyl(name, radius, length, xyz, rgb):
+    """A vertical cylinder at a world position (xyz = centre), flat colour, visual only."""
+    return ('<visual name="%s"><pose>%.3f %.3f %.3f 0 0 0</pose><geometry><cylinder><radius>%s</radius><length>%s</length>'
+            '</cylinder></geometry><material><ambient>%s %s %s 1</ambient><diffuse>%s %s %s 1</diffuse></material></visual>'
+            % ((name,) + tuple(xyz) + (radius, length) + tuple(rgb) + tuple(rgb)))
+
+
+def _storage_area():
+    """The hazardous-waste storage area: shelves, warning decal and signs, bins and posts. Visual only.
+
+    The drop point (locations.yaml, drop_points.storage) is tucked against the north wall between the shelves. The
+    robot stops 0.55 m south of it. Everything else is kept out of the robot's route (it arrives from the west and
+    leaves to the west). The floor decal is 2 cm high, below the LiDAR plane (about 30 cm): only a marking.
+    Textures: hcw_world/scripts/make_hazard_textures.py.
+    """
+    drop = load_locations()['drop_points']['storage']
+    cx = float(drop['x'])
+    pad_y = _NORTH_WALL_Y - 0.85
+    yellow, orange, red = (0.95, 0.75, 0.10), (0.95, 0.50, 0.10), (0.80, 0.15, 0.15)
+    cartons = [yellow, orange, red]
+    visuals = []
+    unit_y = _NORTH_WALL_Y - 0.175
+    for i, dx in enumerate((-2.9, -1.4, 1.4, 2.9)):                      # 4 shelf units, 1.4 m long, 0.1 m apart
+        x = cx + dx
+        visuals.append(_vbox('shelf%d' % i, (1.4, 0.35, 1.8), (x, unit_y, 0.9), (0.25, 0.28, 0.33)))
+        for j, (off, z) in enumerate(((-0.40, 0.35), (0.10, 0.95), (0.40, 1.50))):
+            visuals.append(_vbox('carton%d_%d' % (i, j), (0.45, 0.20, 0.35), (x + off, _NORTH_WALL_Y - 0.45, z),
+                                 cartons[(i + j) % 3]))
+    for k, bx in enumerate((cx + 2.4, cx + 3.0)):                        # two yellow clinical-waste bins, east end
+        visuals.append(_vcyl('bin%d' % k, 0.25, 0.85, (bx, pad_y - 0.1, 0.425), yellow))
+        visuals.append(_vcyl('binlid%d' % k, 0.26, 0.08, (bx, pad_y - 0.1, 0.89), (0.12, 0.12, 0.12)))
+    visuals.append(_vbox('sharps', (0.30, 0.30, 0.40), (cx + 3.5, _NORTH_WALL_Y - 0.65, 0.20), red))
+    for k, px_ in enumerate((cx - 3.6, cx + 3.6)):                       # corner posts at the south corners of the zone
+        visuals.append(_vcyl('post%d' % k, 0.05, 1.1, (px_, _NORTH_WALL_Y - 1.7, 0.55), yellow))
+        visuals.append(_vcyl('postband%d' % k, 0.052, 0.20, (px_, _NORTH_WALL_Y - 1.7, 0.90), (0.08, 0.08, 0.08)))
+    model = '<model name="hcw_prop_storage"><static>true</static><link name="l">%s</link></model>\n' % ''.join(visuals)
+    decal = ('<include><name>hcw_hazard_floor</name><uri>model://hcw_hazard_floor</uri>'
+             '<pose>%.3f %.3f 0.02 0 0 0</pose></include>\n' % (cx, pad_y))
+    signs = ''.join('<include><name>hcw_hazard_sign_%d</name><uri>model://hcw_hazard_sign</uri>'
+                    '<pose>%.3f %.3f 2.2 0 0 0</pose></include>\n' % (i, cx + dx, _NORTH_WALL_Y - 0.03)
+                    for i, dx in enumerate((-1.4, 1.4)))
+    return model + decal + signs
 
 
 def build_world(out_path, profile='floor1', containers=True, decoy=False, props=False):

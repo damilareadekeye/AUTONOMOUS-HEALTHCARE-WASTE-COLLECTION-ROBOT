@@ -50,6 +50,12 @@ World coordinates in metres (the map uses the same frame).
 | storage | 30.9 | -11.5 | Storage bay in the north corridor (see the note below; the original storage point (43.5, -7.8) in the north-east hall was reachable but the way back was not) |
 | tag 14 | 15.4 | -22.7 | Wrong container for rejection tests; only placed with `sim_clinic.launch.py decoy:=True` |
 
+Storage area (changed 2026-11-08): the robot still stops at (30.9, -11.5), but the magnet now puts the container down at (30.9, -10.95), tucked against
+the north wall (wall at y -10.63) and out of the walkway; before, it was dropped 0.9 m south, in the open. With the demo props on (`start_stack.sh gui props`) the
+area is dressed as a hazardous-waste store: an amber hazard-striped floor decal with biohazard-style symbols, four shelf units with warning-coloured cartons,
+two yellow clinical-waste bins, a red sharps box, corner posts and two wall signs ("HAZARDOUS WASTE, AUTHORISED ACCESS ONLY"). This is decoration for the
+demo: it is not a separate room, and a real deployment would store hazardous waste in a dedicated room away from people (a possible next step).
+
 Storage note: the real STORE room is in the north-east hall. SLAM mapped that large open hall
 poorly (drift, stray points), and Nav2 could not plan reliably there (the trip home from a point at
 x > 36 m failed in four repeated runs). The storage bay is therefore in the well-mapped north
