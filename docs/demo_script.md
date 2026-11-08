@@ -58,9 +58,9 @@ Narrate: "We put the wrong container at room B. The robot arrives, the camera se
 It never picks up the wrong thing and never moves unsafely." Afterwards: `bash scripts/demo_fault.sh reset`.
 (If time is short, skip the live failure and describe it; the log has all six cases.)
 
-**Minute 7 to 8: results.** "We ran 30 normal tasks in a row at all three rooms: 30 completed. We staged 6 faults, a missing and a wrong container at each room: all 6 were
-correctly refused, with the right reason. We also found and fixed a real problem on the way: early on, 3 of 30 tasks, all at room A, failed because the robot stopped slightly turned
-and the tag was at the edge of the camera image. We saved camera frames at the failures, found the cause, tightened the arrival tolerance, and it did not recur in 30 runs."
+**Minute 7 to 8: results.** "In simulation, over several test sessions, 67 normal tasks at all three rooms: all 67 completed. We staged 6 faults, a missing and a wrong container at each room: all 6 were
+correctly refused, with the right reason. We also found and fixed two real problems on the way. Early on, 3 of 30 tasks, all at room A, failed because the robot stopped slightly turned and the tag was at the edge of the camera image: we saved camera frames at the failures,
+found the cause and tightened the arrival tolerance. Later, trips to room A sometimes stalled for 45 seconds: we logged the robot's position, found a one-degree dead zone in the heading tolerance, and relaxed it. After that, no stalls."
 
 ## 3. If something goes wrong
 
@@ -78,7 +78,7 @@ and the tag was at the edge of the camera image. We saved camera frames at the f
 | Is this a real robot? | No. It is a simulation: ROS 2, Gazebo and Nav2. The design is for a real TurtleBot-class robot, but nothing here proves it works in a real hospital |
 | Did you train an AI model? | No. Navigation uses Nav2 and a map; container identification uses AprilTag markers, which need no training data. A learned detector (YOLO) is a possible later experiment |
 | Why markers and not recognising the container? | Markers are reliable, give the identity and the position, and need no dataset. Perception only reports what it sees; Nav2 alone moves the robot |
-| How reliable is it? | 30 of 30 normal tasks and 6 of 6 fault cases in simulation. 30 runs supports a true success rate of about 88% or higher; it is not a guarantee |
+| How reliable is it? | 67 of 67 normal tasks and 6 of 6 fault cases in simulation. 67 runs supports a true success rate of about 96% or higher; it is not a guarantee |
 | What did you not test? | Nav2 failing while carrying a container; real hardware; other maps; crowds. The storage point is a bay in the corridor, not the real store room |
 | What about the magnet? | Simulated: the container moves with the robot (see above) |
 | Who built it? | The three of us, with an AI coding assistant (Claude Code) running on Dami's laptop that wrote most of the code and ran the tests under our direction. Decisions are in `docs/DECISIONS.md`, contributions in `docs/TEAM.md` |

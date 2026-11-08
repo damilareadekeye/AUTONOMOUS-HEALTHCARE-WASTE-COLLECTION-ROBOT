@@ -252,7 +252,7 @@ decoy container and obstacles not yet tested).
 | Simulated attach and release | Done (simulated magnet: the container model follows the robot) |
 | Wrong or missing container handling (wait, retry, report) | Done, tested |
 | First complete task end to end | Done on 2026-10-25 |
-| 20 to 30 repeated runs, success rate, times, failures and causes | Done: 30 of 30 normal tasks, 6 of 6 fault cases correct (`docs/09_Week4_Results.md`) |
+| 20 to 30 repeated runs, success rate, times, failures and causes | Done: 67 of 67 normal tasks, 6 of 6 fault cases correct (`docs/09_Week4_Results.md`) |
 | Documentation | Mostly done; still open: demo script, hospital-model ideas, log-template files (David), reproducibility check by a second person |
 | Mentor update | Draft: `docs/10_Progress_Update_Weeks3-4.md` |
 

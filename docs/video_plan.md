@@ -41,7 +41,7 @@ with a small "4x" caption.
 | 0:35 to 1:35 | T2: the robot drives to room A, verifies, carries, drops at storage, returns home; terminal visible | 4x, with a "4x" caption | "We ask for a collection from room A. Nav2 drives the robot there. The camera must see the right AprilTag, and only that tag, in five frames in a row. Then a magnet latch picks the container up; here it is simulated. The robot carries it to storage, releases it, reports the task completed and returns home." |
 | 1:35 to 1:50 | T3: storage close-up, container set against the wall between the shelves | normal | "The container is set down in the hazardous-waste bay, away from the walkway." |
 | 1:50 to 2:30 | T4: wrong container at B; the robot arrives, tries three times, realigns, refuses; terminal shows FAILED with the cause | 4x | "Safety matters more than success. Here we put the wrong container at room B. The robot sees a different tag, tries three times, and refuses. It never picks up the wrong container, and it goes home." |
-| 2:30 to 2:50 | T5: results card | still | "In simulation, 44 of 44 normal tasks completed, and all 6 staged faults, a missing or wrong container at each room, were refused for the right reason." |
+| 2:30 to 2:50 | T5: results card | still | "In simulation, 67 of 67 normal tasks completed, and all 6 staged faults, a missing or wrong container at each room, were refused for the right reason." |
 | 2:50 to 2:58 | Closing card | still | "This is a simulation baseline. Next steps: a dedicated storage room away from people, and testing on real hardware." |
 
 Word count of the voice-over is about 270 words, which fits the time at a calm pace (about 130 words per minute with pauses).
@@ -49,9 +49,9 @@ Word count of the voice-over is about 270 words, which fits the time at a calm p
 ## 5. The results card (one slide)
 
 Title: "Results in simulation".
-- 44 of 44 normal tasks completed (collection points A, B, C).
+- 67 of 67 normal tasks completed (collection points A, B, C).
 - 6 of 6 faults refused with the right cause (missing or wrong container, at A, B and C).
-- Found and fixed a real problem: early on, 3 of 30 tasks at room A failed because the tag was at the edge of the camera image.
+- Found and fixed two real problems: tasks at room A failed when the tag was at the edge of the camera image, and later stalled 45 s on a one-degree heading dead zone.
 - Small print: "Simulation only. One map. Magnet simulated."
 
 ## 6. Editing in CapCut (steps)

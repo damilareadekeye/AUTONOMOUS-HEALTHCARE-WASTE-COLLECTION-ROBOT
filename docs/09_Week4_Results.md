@@ -8,7 +8,7 @@ Raw data: `docs/results/runs_all_sessions.csv` (every logged run) and `docs/resu
 
 | Measure | Result |
 |---|---|
-| **Normal tasks completed** (home, collection point A, B or C, verify, attach, storage, release, report) | **63 of 63 logged tasks (100 %)** under the final settings: A 35, B 15, C 15 (counting runs 56 to 128; 30 of them are the Oct 25 batch, 33 were run on Nov 7 and 8, see sections 6 to 8) |
+| **Normal tasks completed** (home, collection point A, B or C, verify, attach, storage, release, report) | **67 of 67 logged tasks (100 %)** under the final settings: A 37, B 15, C 15 (counting runs 56 to 128; 30 of them are the Oct 25 batch, 37 were run on Nov 7 and 8, see sections 6 to 8) |
 | **Fault cases handled correctly** (missing or wrong container: the task must FAIL with the right cause, put the container back, return home) | **6 of 6** |
 | Time from request to REPORT (normal tasks) | mean 89 s, median 87 s, min 85 s, max 146 s |
 | Time per stage (mean of the 30) | navigate to the collection point 33 s (one run 98 s), verify 0.5 s, transport to storage 56 s |
@@ -57,7 +57,7 @@ box in the corridor that leaves a gap is driven around (completed), and a corrid
   in front of the container; it never enters a room (the doorways are blocked on the map).
 - **Faults were injected by moving container models**, not by real failures of the camera or the robot. The unstable-tag case is
   tested by unit tests of the verification rule, not by a live run.
-- **Sample size.** 30 normal tasks, 6 fault cases. 55 successes in 55 logged runs supports a true success rate of about 95 % or higher
+- **Sample size.** 30 normal tasks, 6 fault cases. 67 successes in 67 logged runs supports a true success rate of about 96 % or higher
   (95 % confidence, exact binomial lower bound), not "never fails". Only tasks that finished are logged: tasks that were interrupted
   because the stack was stopped for another reason are not in the log.
 - **One slow run:** run 74 (A) needed 98 s to reach the collection point instead of about 39 s, then completed. The cause was not
@@ -115,8 +115,7 @@ signs, bins). Navigation settings did not change.
 
 **Slow trips to point A, updated.** Of 29 completed tasks at A under the final settings, 7 took 84 to 98 s to reach the collection point instead of 38 to 41 s. On Oct 25 it was 1 of 18
 (run 74); on Nov 7 and 8 it was 6 of 11 (runs 93, 96, 103, 107, 108, 111), with and without props, at 95 to 100 % speed. B (13 tasks) and C (13 tasks): none. All of them completed.
-The extra time (about 45 s) matches Nav2's progress-checker recovery ("failed to make progress", about 10 s each). The cause is not yet identified. For a demo or video,
-use B or C for the live task: they have never been slow.
+The extra time (about 45 s) matches Nav2's progress-checker recovery ("failed to make progress", about 10 s each). The cause was found and fixed afterwards (section 8: a heading dead zone at the goal). After the fix, point A is as fast as before.
 
 **Nav2 start-up.** On this laptop Nav2's navigation servers sometimes fail to activate within the first 90 s (seen several times on Nov 7 and 8). `scripts/start_stack.sh` waits for
 `bt_navigator` to be active and restarts Nav2 up to three times; each retry adds about 3 minutes.
