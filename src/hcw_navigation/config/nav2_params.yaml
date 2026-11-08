@@ -101,7 +101,8 @@ controller_server:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 0.15   # was 0.25: at point A the robot stopped 18 degrees off and the tag left the camera view
-      yaw_goal_tolerance: 0.10   # was 0.25 (see above)
+      yaw_goal_tolerance: 0.15   # 0.25 -> 0.10 on Oct 25 (tag left the camera view at 0.31 rad), 0.10 -> 0.15 on Nov 8: at 0.10 the controller
+                                 # sometimes stopped 0.02 rad outside and stalled ~45 s at point A (progress checker). 0.15 rad = 8.6 degrees
     FollowPath:
       plugin: "nav2_mppi_controller::MPPIController"
       time_steps: 56

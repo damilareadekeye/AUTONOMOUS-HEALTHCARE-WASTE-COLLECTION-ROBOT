@@ -107,7 +107,7 @@ A second batch of 12 tasks at A failed twice more (tasks 51 and 55), so it was r
 | Evidence saved by the task manager at each failure (`results/incidents/`) | Container in Gazebo exactly at its place (15.4, -18.6). Robot AMCL pose (13.2, -18.2) with yaw 0.31 rad (18 degrees) instead of (13.6, -18.6) yaw 0 |
 | Camera frame at the failure | The container with its tag is at the **right edge of the image**, partly cut off, so `apriltag_ros` cannot decode it |
 | Cause | Nav2's goal tolerance (0.25 m, 0.25 rad) let the robot stop turned and offset; at A the container is just inside the camera's view only when the robot faces it |
-| Fix | `xy_goal_tolerance` 0.15 m and `yaw_goal_tolerance` 0.10 rad in `hcw_navigation/config/nav2_params.yaml`; and the task manager re-sends the navigation goal to realign before each verification retry |
+| Fix | `xy_goal_tolerance` 0.15 m and `yaw_goal_tolerance` 0.10 rad (raised to 0.15 rad on 2026-11-08, see doc 09 section 8) in `hcw_navigation/config/nav2_params.yaml`; and the task manager re-sends the navigation goal to realign before each verification retry |
 | Result of the fix | 12 of 12 tasks at A completed (before: 5 of 6, then 10 of 12) |
 
 Lesson: the verification step depends on the robot's final heading. A small sample cannot prove the failure is gone; the final batch below uses the fixed settings.

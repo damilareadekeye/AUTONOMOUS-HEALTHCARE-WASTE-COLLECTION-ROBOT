@@ -8,7 +8,7 @@ Raw data: `docs/results/runs_all_sessions.csv` (every logged run) and `docs/resu
 
 | Measure | Result |
 |---|---|
-| **Normal tasks completed** (home, collection point A, B or C, verify, attach, storage, release, report) | **55 of 55 logged tasks (100 %)** under the final settings: A 29, B 13, C 13. 30 of them are the Oct 25 batch (A 18, B 6, C 6); 25 were run on Nov 7 and 8 (sections 6 and 7) |
+| **Normal tasks completed** (home, collection point A, B or C, verify, attach, storage, release, report) | **63 of 63 logged tasks (100 %)** under the final settings: A 35, B 15, C 15 (counting runs 56 to 128; 30 of them are the Oct 25 batch, 33 were run on Nov 7 and 8, see sections 6 to 8) |
 | **Fault cases handled correctly** (missing or wrong container: the task must FAIL with the right cause, put the container back, return home) | **6 of 6** |
 | Time from request to REPORT (normal tasks) | mean 89 s, median 87 s, min 85 s, max 146 s |
 | Time per stage (mean of the 30) | navigate to the collection point 33 s (one run 98 s), verify 0.5 s, transport to storage 56 s |
@@ -96,7 +96,7 @@ They stay an optional demo mode (`scripts/start_stack.sh gui props`), off by def
 
 **Slow trips to point A.** In 4 of the 24 completed tasks at A, reaching the collection point took 84 to 98 s instead of the usual 38 to 41 s (runs 74, 93, 96, 103).
 B (10 tasks) and C (10 tasks) had none. All 4 still completed. In one case the Nav2 log showed four "failed to make progress" events and one recovery spin while the
-machine was loaded (control loop at 10 Hz instead of 20). The cause was not isolated.
+machine was loaded (control loop at 10 Hz instead of 20). The cause was found and fixed on Nov 8: see section 8.
 
 **A process bug found and fixed.** A task manager from an earlier run, stuck waiting for Nav2, ignored the normal stop signal and kept running next to the new one, which froze
 two batches (one `ros2 param set` command waited forever). `scripts/clean_sims.sh` now force-kills it, `scripts/start_stack.sh` refuses to start if one is still alive,
@@ -120,3 +120,16 @@ use B or C for the live task: they have never been slow.
 
 **Nav2 start-up.** On this laptop Nav2's navigation servers sometimes fail to activate within the first 90 s (seen several times on Nov 7 and 8). `scripts/start_stack.sh` waits for
 `bt_navigator` to be active and restarts Nav2 up to three times; each retry adds about 3 minutes.
+
+## 8. The slow trips to point A: diagnosis and fix (2026-11-08)
+
+**Diagnosis.** Four tasks at A were run with the robot's position logged every 0.5 s and matched to the Nav2 log. All 18 stall events sat at the final approach to A: the robot stopped at about
+(13.4, -18.3), 0.33 m from the goal (13.6, -18.6), with its heading at 0.12 rad, while the goal tolerance for heading was 0.10 rad. It was 0.02 rad (about 1 degree) outside the tolerance, the controller
+then commanded no motion, and Nav2's progress checker ("failed to make progress", 10 s each) fired four times (about 42 s) until a recovery spin moved the robot into tolerance. When the final heading happened to be
+0.08 rad the task went straight through. So this was a dead zone between the tolerance and the controller, not a map, prop or storage problem.
+
+**Fix.** `yaw_goal_tolerance` in `hcw_navigation/config/nav2_params.yaml` raised from 0.10 to 0.15 rad (8.6 degrees). The earlier tag-detection failures happened at 0.31 rad off, so 0.15 rad still keeps the tag well inside the
+camera's view (about 37 degrees to each side).
+
+**Test.** 8 tasks (A four times, B and C twice each, runs 121 to 128): 8 of 8 completed; navigate to A 39.5, 38.9, 39.2, 39.2 s (before the fix 6 of 11 recent trips to A took 84 to 98 s); B 24.2 and 24.1 s; C 13.6 and 13.3 s; speed 100 %.
+Four tasks at A is a small sample; the change is supported by the mechanism found in the logs as well as by the numbers.
