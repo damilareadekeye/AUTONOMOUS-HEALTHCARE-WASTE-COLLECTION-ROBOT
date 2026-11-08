@@ -29,12 +29,25 @@ n=0; until timeout 8 ros2 topic echo /odom --once >/dev/null 2>&1; do
 done
 sleep 15
 
-say "starting Nav2"
-setsid nohup ros2 launch hcw_navigation navigation.launch.py > /tmp/hcw_nav.log 2>&1 &
-n=0; until timeout 8 ros2 topic echo /amcl_pose --once >/dev/null 2>&1; do
-  sleep 3; n=$((n+1)); [ $n -gt 40 ] && { say "FAILED: Nav2 did not localise (see /tmp/hcw_nav.log). Run scripts/clean_sims.sh and try again"; exit 1; }
+start_nav() {
+  setsid nohup ros2 launch hcw_navigation navigation.launch.py > /tmp/hcw_nav.log 2>&1 &
+  n=0; until timeout 8 ros2 topic echo /amcl_pose --once >/dev/null 2>&1; do
+    sleep 3; n=$((n+1)); [ $n -gt 40 ] && return 1
+  done
+  say "Nav2 localised; waiting for the navigation servers to become active"
+  n=0; until timeout 8 ros2 lifecycle get /bt_navigator 2>/dev/null | grep -q "active \[3\]"; do
+    sleep 3; n=$((n+1)); [ $n -gt 30 ] && return 1
+  done
+  return 0
+}
+for attempt in 1 2 3; do
+  say "starting Nav2 (attempt $attempt)"
+  if start_nav; then break; fi
+  say "Nav2 did not become fully active (it can time out while the machine is busy); restarting it"
+  pkill -f "bin/ros2 launch hcw_navigation"; pkill -f "lib/nav2_"; sleep 6; pkill -9 -f "lib/nav2_"; sleep 2
+  [ $attempt -eq 3 ] && { say "FAILED: Nav2 never became active (see /tmp/hcw_nav.log). Close other programs and try again"; exit 1; }
 done
-say "Nav2 localised"
+say "Nav2 fully active"
 
 say "starting tag detection and the task manager"
 setsid nohup ros2 launch hcw_perception apriltag.launch.py > /tmp/hcw_tags.log 2>&1 &
