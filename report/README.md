@@ -17,6 +17,12 @@ Either upload `IEEE_Report_Overleaf.zip` (Overleaf: New Project, Upload Project)
 
 `https://www.overleaf.com/docs?snip_uri=https://raw.githubusercontent.com/damilareadekeye/AUTONOMOUS-HEALTHCARE-WASTE-COLLECTION-ROBOT/main/report/IEEE_Report_Overleaf.zip`
 
+## Edit and see the PDF update (VS Code)
+
+Open the `report` folder in VS Code (File, Open Folder) with the LaTeX Workshop extension. Save `main.tex` or `references.bib` and the PDF rebuilds by itself (pdfLaTeX, BibTeX, pdfLaTeX twice) and refreshes in the PDF tab. The helper files (`.aux`, `.bbl`, `.log` and similar) are deleted after every build, so only the `.tex`, `.bib` and `.pdf` files stay. The editor settings live in `report/.vscode/settings.json` on the reference laptop (they contain absolute paths, so they are not committed). In Overleaf, the same project compiles by itself on save.
+
+If you see `[?]` where a citation number should be, the build stopped after the first pass: build again.
+
 ## Build locally (Windows, MiKTeX)
 
 ```
