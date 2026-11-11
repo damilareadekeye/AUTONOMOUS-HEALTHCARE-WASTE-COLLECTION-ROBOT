@@ -4,33 +4,14 @@ Report for the IEEE Research Paper Writing Workshop (14 November 2026): *Autonom
 
 | File | What it is |
 |---|---|
-| `IEEE_Report.pdf` | The built report (IEEE conference format, 7 pages, clickable references) |
+| `IEEE_Report.pdf` | The built report (IEEE conference format, 8 pages including references) |
 | `main.tex`, `references.bib`, `figures/` | LaTeX source (`IEEEtran` conference class, BibTeX) |
-| `IEEE_Report_Overleaf.zip` | The same source as one zip, to upload to Overleaf |
-| `data/runs_56_128.csv` | The run log used in the results (73 runs: 67 normal tasks, 6 staged faults) |
-| `scripts/analyze_runs.py` | Recomputes every number and the results figure from the run log |
-| `build.ps1` | Local build on Windows with MiKTeX (see below) |
+| `data/runs_56_139.csv` | The run log. The tables use runs 56-128 (73 runs: 67 normal tasks, 6 staged faults); runs 129-139 are the later runs described in Section "Later runs and stress trials" |
+| `scripts/analyze_runs.py` | Recomputes the numbers and the results figure from the run log |
+| `scripts/plot_map_paper.py` | Draws the clinic map figure |
 
-## Open in Overleaf
-
-Either upload `IEEE_Report_Overleaf.zip` (Overleaf: New Project, Upload Project), or open this link while signed in to Overleaf:
-
-`https://www.overleaf.com/docs?snip_uri=https://raw.githubusercontent.com/damilareadekeye/AUTONOMOUS-HEALTHCARE-WASTE-COLLECTION-ROBOT/main/report/IEEE_Report_Overleaf.zip`
-
-## Edit and see the PDF update (VS Code)
-
-Open the `report` folder in VS Code (File, Open Folder) with the LaTeX Workshop extension. Save `main.tex` or `references.bib` and the PDF rebuilds by itself (pdfLaTeX, BibTeX, pdfLaTeX twice) and refreshes in the PDF tab. The helper files (`.aux`, `.bbl`, `.log` and similar) are deleted after every build, so only the `.tex`, `.bib` and `.pdf` files stay. The editor settings live in `report/.vscode/settings.json` on the reference laptop (they contain absolute paths, so they are not committed). In Overleaf, the same project compiles by itself on save.
-
-If you see `[?]` where a citation number should be, the build stopped after the first pass: build again.
-
-## Build locally (Windows, MiKTeX)
-
-```
-powershell -File build.ps1
-```
-
-On the reference laptop the `pdflatex` launcher of MiKTeX fails with a missing-DLL error, so `build.ps1` calls the engine directly (`miktex-pdftex -undump=pdflatex`) and then `miktex-bibtex`. On a normal installation `latexmk -pdf main.tex` works.
+To build: upload the folder to Overleaf, or run `latexmk -pdf main.tex` (pdfLaTeX + BibTeX). If a citation shows `[?]`, build again.
 
 ## References
 
-Every reference with a DOI was rebuilt from its Crossref record (authors, venue, volume, pages) and links to `https://doi.org/<DOI>`. The web sources (WHO, WHO/UNICEF, Aethon, HFM Magazine, Diligent Robotics, Relay Robotics, TurtleBot 4 manual, Open-RMF, this repository) were opened and checked on 11 November 2026.
+Every reference with a DOI was rebuilt from its Crossref record and links to `https://doi.org/<DOI>`. The web sources (WHO, WHO/UNICEF, Aethon, HFM Magazine, Diligent Robotics, Relay Robotics, TurtleBot 4 manual, Open-RMF, this repository) were opened and checked on 11 November 2026.

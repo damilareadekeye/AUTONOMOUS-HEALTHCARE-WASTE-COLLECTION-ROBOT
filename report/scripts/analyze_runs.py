@@ -42,20 +42,23 @@ try:
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    fig, axes = plt.subplots(1, 2, figsize=(3.4, 1.9))
+    fig, axes = plt.subplots(1, 2, figsize=(3.45, 2.2))
     cols = {'A': '#2E6BFF', 'B': '#1FA85A', 'C': '#F08A00'}
     for ax, key, title in ((axes[0], 'time_navigate_s', 'Drive to room'), (axes[1], 'time_transport_s', 'Carry to storage')):
         for i, room in enumerate('ABC'):
             ys = [float(r[key]) for r in ok if r['collection_point'] == room]
-            xs = [i + (j % 7 - 3) * 0.05 for j in range(len(ys))]
-            ax.scatter(xs, ys, s=5, color=cols[room], alpha=0.8, linewidths=0)
-            ax.hlines(statistics.median(ys), i - 0.3, i + 0.3, color='black', linewidth=0.8)
-        ax.set_xticks([0, 1, 2]); ax.set_xticklabels(['A', 'B', 'C'], fontsize=6)
-        ax.set_title(title, fontsize=6.5); ax.tick_params(axis='y', labelsize=6)
-        ax.set_xlabel('Collection room', fontsize=6)
-    axes[0].set_ylabel('Time (s)', fontsize=6.5)
-    plt.tight_layout(pad=0.4)
-    out = os.path.join(ROOT, 'figures', 'fig_times.pdf')
+            xs = [i + (j % 7 - 3) * 0.06 for j in range(len(ys))]
+            ax.scatter(xs, ys, s=9, color=cols[room], alpha=0.85, linewidths=0)
+            ax.hlines(statistics.median(ys), i - 0.32, i + 0.32, color='black', linewidth=1.0)
+        ax.set_xticks([0, 1, 2]); ax.set_xticklabels(['A', 'B', 'C'], fontsize=8)
+        ax.set_title(title, fontsize=8); ax.tick_params(axis='y', labelsize=8)
+        ax.set_xlabel('Collection room', fontsize=8)
+    axes[0].set_ylabel('Time (s)', fontsize=8)
+    plt.tight_layout(pad=0.4, w_pad=0.8)
+    figdir = os.path.join(ROOT, 'figures')
+    if not os.path.isdir(figdir):       # report_extras layout: write next to the report folder
+        figdir = os.path.join(ROOT, '..', 'report', 'figures')
+    out = os.path.join(figdir, 'fig_times.pdf')
     plt.savefig(out)
     print('figure written:', out)
 except ImportError:
